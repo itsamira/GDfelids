@@ -11,7 +11,7 @@ output:
 library(tidyr)
 library(dplyr)
 library(knitr)
-opts_chunk$set(warning = FALSE, message = FALSE, root.dir = "/home/amira.azizan/Documents/Y320/GenDivDatabase")
+opts_chunk$set(warning = FALSE, message = FALSE)
 options(width = 100)
 ```
 
@@ -23,7 +23,8 @@ Data building script for grouping GD and PD estimates based on
 ```{r, include=F}
 
 #source("Rscript/DataCleanup.R")
-load("/home/amira.azizan/Documents/Y320/GenDivDatabase/Data/GPall_data.rda")
+load("/Data/GPall_data.rda")
+# This data file is not available to public
 # 3 df objects: gen, den and gp_df
 
 ```
@@ -207,6 +208,7 @@ Sigma data details:
 -   radius, 95% home range radius for a half normal detection, $\sqrt{(-log(0.05)*2*σ^2}$
 -   home range (hr) calculated as $2*\pi*radius$
 -   maximum distance dispersal (DI) , $40*hr^{0.5}$
+-   Generation length in days from Pacifici et al. 2013
 
 ```{r, eval=F}
 sp_df <- merge(sp_df, sigma_df, by="sp", all.x=T)
@@ -216,8 +218,8 @@ sp_df$distance.lowerthanDI <- sp_df$distance <= sp_df$DI*1e3
 ```{r include=FALSE}
 ## Automatic processing for all species
 
-#source("~/Documents/Y320/GenDivDatabase/Rscript/DataBuilding_auto.R")
-gp_full <- readRDS("Data/GPclus_results.rds")
+#source("Scripts/DataBuilding_auto.R")
+
 gp_df <- merge(gp_df, gp_full, all.x=T)
 gp_df <- merge(gp_df, sigma_df)
 # DI is in km, distance is in m
@@ -283,7 +285,7 @@ clus_sp <- clus_sp[which(sp_df$distance.lowerthanDI == TRUE),]
 ## load cluster data (from 5_Kmeans)
 gp_df <- readRDS("Data/Cluster_res_biogeo_v5.rds")
 clus.res <- gp_df
-source("Rscript/DataBuilding_Merge_clusters.R")
+source("Script/DataBuilding_Merge_clusters.R")
 
 # load results from DataBuilding_Merge_clusters.R
 #load("Data/Popgenden.rda")
