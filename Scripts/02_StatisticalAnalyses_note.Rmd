@@ -13,7 +13,7 @@ output:
 
 ```{r setup, echo=F}
 library(knitr)
-opts_chunk$set(warning = FALSE, root.dir = "/home/amira.azizan/Documents/Y320/GenDivDatabase")
+opts_chunk$set(warning = FALSE)
 ```
 
 ```{r echo=T, message=F, include=T}
@@ -649,7 +649,7 @@ All 3 GD models showed significant effect of PD
 
 ```{r, eval=F, include=F}
 #Plot figure 2
-#source("~/Documents/Y320/GenDivDatabase/Rscript/StatisticalAnalyses_PlotPred.R")
+#source("Script/StatisticalAnalyses_PlotPred.R")
 ```
 
 ## Includes covariates 
