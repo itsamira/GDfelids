@@ -1,0 +1,561 @@
+---
+title: "Data Building"
+output:
+  html_document:
+    df_print: paged
+  html_notebook: default
+  pdf_document: default
+---
+
+```{r setup, include=F}
+library(tidyr)
+library(dplyr)
+library(knitr)
+opts_chunk$set(warning = FALSE, message = FALSE, root.dir = "/home/amira.azizan/Documents/Y320/GenDivDatabase")
+options(width = 100)
+```
+
+Data building script for grouping GD and PD estimates based on
+
+-   K-means clustering (cluster data set)
+-   Country localities (country data set)
+
+```{r, include=F}
+
+#source("Rscript/DataCleanup.R")
+load("/home/amira.azizan/Documents/Y320/GenDivDatabase/Data/GPall_data.rda")
+# 3 df objects: gen, den and gp_df
+
+```
+
+# Data description
+
+```{r, echo=FALSE, results='asis'}
+kable(table(as.factor(gen$species.specific)) / sum(table(as.factor(gen$species.specific))), caption="Loci type in GD data")
+```
+
+There are `r length(unique(gen$ref))` population genetic studies and `r length(unique(den$ref))` population density studies in the raw datasets.
+
+```{r, results='asis', echo=FALSE}
+t0 <- gp_df %>% group_by(sp, source) %>% dplyr::summarise(N=n_distinct(population), .groups='drop')
+kable(t0 %>% pivot_wider(names_from=source, values_from=N), caption="Number of distinct populations for each measure")
+```
+
+```{r, results='asis', echo=FALSE}
+t1 <- gp_df %>% group_by(sp, source) %>% dplyr::summarise(N=n_distinct(country), .groups='drop')
+
+
+kable(t1 %>% pivot_wider(names_from=source, values_from=N), caption="Number of distinct countries in each species")
+```
+
+# Applying K-means clustering in each species
+
+Example : tigers
+
+```{r eval=FALSE, include=TRUE}
+j = "Panthera tigris"
+## Subset to sp data -----------------------------------------------------------------------
+sp_name <- sort(unique(gp_df$sp))
+sp_df.i <- droplevels(gp_df[gp_df$sp %in% j,])
+```
+
+1.  Verify each row has long/lat. Remove duplicated coordinates as we need one point per localisation for clustering.
+
+```{r eval=FALSE, include=TRUE}
+all(complete.cases(sp_df.i[,c("long","lat")]))
+
+dups <- duplicated(sp_df.i[,c("long","lat","source")])
+if (any(dups)) {
+  print(paste(length((dups[dups])), "Dups detected"))
+  sp_df <- sp_df.i[!dups,]
+  sp_df.ii <- sp_df.i[dups,]
+  } else sp_df <- sp_df.i
+
+
+```
+
+```{r eval=FALSE, include=TRUE}
+# - initialise column
+  sp_df$cluster_den <- NA
+  sp_df$cluster_gen <- NA
+  sp_df$closest_ID <- NA
+  sp_df$distance <- NA
+  sp_df$cluster_center <- NA
+```
+
+2.  Overlaid biogeographic regions and apply clustering within each biogeo
+
+```{r eval=FALSE, include=TRUE}
+# Biogeographical realms from https://www.sciencebase.gov/catalog/item/508fece8e4b0a1b43c29ca22
+# biogeo <- readOGR("www_ter_ecos.shp")
+points <- sp::SpatialPoints(coords=sp_df[,c("long","lat")], proj4string = sp::CRS("+proj=longlat +datum=WGS84 +no_defs"))
+biogeo.point <- raster::extract(x=biogeo[,c("REALM")], y=points)
+
+sp_df <- cbind(sp_df, biogeo.point[,c("REALM")])
+nbiogeo <- table(sp_df$REALM)
+nbiogeo
+
+kk <- tapply(sp_df$source, sp_df$REALM, n_distinct)
+table(sp_df$REALM, sp_df$source)
+# Which biogeo has both GD and PD
+sp_df <- subset(sp_df, REALM %in% names(which(kk == 2)))
+sp_df$REALM <- droplevels(sp_df$REALM)
+#subset to biogeo
+for (k in names(kk)){
+  bg_i <- which(sp_df$REALM == k)
+
+# Check number of pop in each dataset
+foo <- table(sp_df$source[bg_i])
+print(k)
+print(foo)
+```
+
+3.  Apply K-means clustering using GD and PD as initial centroids
+
+```{r eval=FALSE, include=TRUE}
+if(length(foo) == 0) next
+# using Popden coordinates as centers
+cls_df <- sp_df[bg_i,]
+den_cls <- kmeans(cls_df[,c("long","lat")], centers=cls_df[which(cls_df$source == "Popden"),c("long","lat")], trace=TRUE)
+
+cls_df[,"cluster_den"] <- den_cls$cluster
+cls_df$cluster_den <- paste0(cls_df$cluster_den,"_", cls_df$REALM)
+
+# using Popgen coordinates as centers
+gen_cls <- kmeans(cls_df[,c("long","lat")], centers=cls_df[which(cls_df$source == "Popgen"),c("long","lat")], trace=TRUE)
+cls_df[,"cluster_gen"] <- gen_cls$cluster
+cls_df$cluster_gen <- paste0(cls_df$cluster_gen,"_",cls_df$REALM)
+
+sp_df[bg_i, "cluster_den"] <- cls_df$cluster_den
+sp_df[bg_i, "cluster_gen"] <- cls_df$cluster_gen
+```
+
+4.  Join unassigned data points to the nearest unassigned point
+
+```{r eval=FALSE, include=TRUE}
+## based on gen
+bg_df <- sp_df[bg_i, ]
+# - calculate distances between the nearest points -Popgen <-> Popden, (in meters)
+xx <- bg_df[which(bg_df$source == "Popgen"),c("long","lat")]
+yy <- bg_df[which(bg_df$source == "Popden"),c("long","lat")]
+mat_gen2den <- geosphere::distm(xx, 
+                                yy)
+# get distance
+bg_df[which(bg_df$source == "Popgen"),"distance"] <- apply(mat_gen2den, 1, min)
+bg_df[which(bg_df$source == "Popden"),"distance"] <- apply(mat_gen2den, 2, min)
+
+# get id of the closest and store it in bg_df$closest_ID
+bg_df$closest_ID[which(bg_df$source == "Popden")] <- bg_df$ID[which(bg_df$source == "Popgen")][apply(mat_gen2den, 2, which.min)]
+bg_df$closest_ID[which(bg_df$source == "Popgen")] <- bg_df$ID[which(bg_df$source == "Popden")][apply(mat_gen2den, 1, which.min)]
+
+# - assign to the nearest cluster (not given by kmeans)
+# sort df in ascending order of the distance
+bg_df <- bg_df[order(bg_df$distance),]
+# by row operation
+# modify clus_den
+for (i in 1:nrow(bg_df)){
+    x <- bg_df[i, "ID"]
+      # refresh cluster info
+    b <- xtabs(~cluster_den+source, data=bg_df)
+    nclus.d <- which(rowSums(b > 0) == 2)
+    
+    clos_id <- bg_df[bg_df$ID == x,"closest_ID"]
+        if(!bg_df$cluster_den[bg_df$ID == clos_id] %in% names(nclus.d)){
+      
+      bg_df$cluster_den[bg_df$ID == x] <- bg_df[bg_df$ID == clos_id,"cluster_den"]
+    }
+}
+# modify clus_gen
+for (i in 1:nrow(bg_df)){
+    x <- bg_df[i, "ID"]
+      # refresh cluster info
+    b <- xtabs(~cluster_gen+source, data=bg_df)
+    nclus.g <- which(rowSums(b > 0) == 2)
+    clos_id <- bg_df[bg_df$ID == x,"closest_ID"]
+        if(!bg_df$cluster_gen[bg_df$ID == clos_id] %in% names(nclus.g)){
+          bg_df$cluster_gen[bg_df$ID == x] <- bg_df[bg_df$ID == clos_id,"cluster_gen"]
+    }
+}
+
+sp_df[bg_i,] <- bg_df
+}
+
+```
+
+-   Include duplicates (based on long/lat)
+
+```{r eval=FALSE, include=TRUE}
+if(any(dups)){
+  poo <- merge(sp_df.ii[,c("long","lat","source")], 
+               sp_df[,c("long","lat","source","cluster_den","cluster_gen","cluster_center", "closest_ID","distance")], all.x=T, all.y=F)
+  poop <- merge(sp_df.ii, unique(poo))
+  sp_df <- rbind(sp_df, poop)
+}
+```
+
+5.  Check if joined data are within species' dispersal distance
+
+```{r}
+# Sigma data -----------------------------------------------------------
+sigma_df <- read.csv("Data/Sigma_data.csv")
+```
+
+Sigma data details:
+
+-   body mass (bm, in kg), averaged male and female body mass from Johnson et al. 2017, and Huaranca et al. 2019 for *Leopardus jacobita*
+-   sigma, σ, averaged across all estimates in SECR models
+-   radius, 95% home range radius for a half normal detection, $\sqrt{(-log(0.05)*2*σ^2}$
+-   home range (hr) calculated as $2*\pi*radius$
+-   maximum distance dispersal (DI) , $40*hr^{0.5}$
+
+```{r, eval=F}
+sp_df <- merge(sp_df, sigma_df, by="sp", all.x=T)
+sp_df$distance.lowerthanDI <- sp_df$distance <= sp_df$DI*1e3
+```
+
+```{r include=FALSE}
+## Automatic processing for all species
+
+#source("~/Documents/Y320/GenDivDatabase/Rscript/DataBuilding_auto.R")
+gp_full <- readRDS("Data/GPclus_results.rds")
+gp_df <- merge(gp_df, gp_full, all.x=T)
+gp_df <- merge(gp_df, sigma_df)
+# DI is in km, distance is in m
+gp_df$distance.lowerthanDI <- gp_df$distance <= gp_df$DI*1e3
+
+# save cluster results
+#saveRDS(gp_df, "Data/Cluster_res_biogeo_v5.rds")
+
+```
+
+6.  Merge GD and PD data based on clusters
+
+```{r, eval=F, include=T}
+gendata_sp <- subset(gen, sp %in% j)
+dendata_sp <- subset(den, sp %in% j)
+clus_sp <- subset(sp_df, sp %in% j)
+clus_sp <- clus_sp[which(sp_df$distance.lowerthanDI == TRUE),]
+    
+    # Separate data based on source
+    clus_sp_gen <- clus_sp[which(clus_sp$source == "Popgen"),c("country","long","lat","cluster_center","distance.lowerthanDI")]
+    clus_sp_gen <- unique(clus_sp_gen)
+    
+    clus_sp_den <- clus_sp[which(clus_sp$source == "Popden"),c("ref","country","long","lat","cluster_center","distance.lowerthanDI")]
+    clus_sp_den <- unique(clus_sp_den)
+
+    x <- dplyr::left_join(gendata_sp,clus_sp_gen, by=c("country","long","lat"))
+    if(any(is.na(x$cluster_center))) x <- x[!is.na(x$cluster_center),]
+    xl[[j]] <- x
+    
+    y <- dplyr::left_join(clus_sp_den, dendata_sp)
+    if(any(is.na(y$cluster_center))) y <- y[!is.na(y$cluster_center),]
+    y$cluster_center <- droplevels(as.factor(y$cluster_center))
+    yl[[j]] <- y
+
+# # Calculate the DP average across studies in each cluster_center before merging with the GD
+    DP_mean <- aggregate(dp ~ cluster_center, data = y, FUN=mean, na.action=na.omit)
+    DP_max <- aggregate(dp ~ cluster_center, data = y, FUN=max, na.action=na.omit)
+    DP_sd <- aggregate(dp ~ cluster_center, data = y, FUN=sd, na.action=na.omit)
+    DP_n <- aggregate(dp ~ cluster_center, data = y, FUN=n_distinct, na.action=na.omit)
+    DP_median <- aggregate(dp ~ cluster_center, data = y, FUN=median, na.action=na.omit)
+    
+    DP_mean <- data.frame(cluster_center=DP_max[,1], DP_max=DP_max[,2], DP_mean=DP_mean[,2], DP_sd=DP_sd[,2], DP_n=DP_n[,2], DP_median=DP_median[,2])
+    
+    DP_ref <- tapply(y$ref, y$cluster_center, unique)
+    DP_ref <- lapply(DP_ref, paste, collapse=", ")
+    DP_ref <- do.call(rbind,DP_ref)
+    DP_ref <- data.frame(ref=DP_ref, cluster_center=rownames(DP_ref))
+    
+    DP_mean <- merge(DP_mean, DP_ref, all.x=T)
+    
+    DP_pop <- tapply(y$population, y$cluster_center, unique)
+    DP_pop <- lapply(DP_pop, paste, collapse=", ")
+    DP_pop <- do.call(rbind,DP_pop)
+    DP_pop <- data.frame(population=DP_pop, cluster_center=rownames(DP_pop))
+    
+    
+    DP_mean <- merge(DP_mean, DP_pop, all.x=T)
+    
+    gen_dp <- dplyr::left_join(x, DP_mean, by="cluster_center", suffix=c(".gen",".den"))
+```
+
+```{r eval=TRUE, include=F}
+## load cluster data (from 5_Kmeans)
+gp_df <- readRDS("Data/Cluster_res_biogeo_v5.rds")
+clus.res <- gp_df
+source("Rscript/DataBuilding_Merge_clusters.R")
+
+# load results from DataBuilding_Merge_clusters.R
+#load("Data/Popgenden.rda")
+```
+
+# Visualise the clustering results
+
+```{r eval=TRUE, include=FALSE}
+library(ggmap)
+mapp <- list()
+sp_name <- unique(gp_df$sp)
+
+for (j in sp_name){
+  sp_df <- droplevels(gp_df[gp_df$sp %in% j,])
+  print(j)
+  sp_df <- unique(sp_df)
+  
+# create blank map focusing at the so data range  
+xy <- cbind(sp_df$long,sp_df$lat)
+if(length(unique(sp_df$source)) == 1) next
+S <- sp::SpatialPoints(xy)
+# add extra margins around the map
+S <- raster::buffer(S, width=200000)
+# # get map
+world <- ggmap::get_map(location = sp::bbox(S), zoom = 4, source="google")
+
+b <- xtabs(~cluster_gen+source, data=sp_df, na.action=na.omit)
+nclus <- which(rowSums(b > 0) == 2)
+x <- table(sp_df$source[sp_df$cluster_all %in% names(nclus)])
+
+fig.1 <- ggmap(world) +
+  geom_point(data = sp_df, aes(x = long, y = lat, pch=factor(source)), size = 3) + 
+  scale_shape_manual(values=c(16,4)) +
+  geom_path(data = sp_df[which(sp_df$cluster_gen %in% names(nclus)),], aes(x = long, y = lat, col=factor(cluster_gen)), size=2) +
+  guides(color="none") +
+  geom_point(data =sp_df[which(sp_df$cluster_gen %in% names(nclus)),], 
+             aes(x = long, y = lat, col=factor(cluster_gen), pch=factor(source)), size = 3) +
+  labs(title=paste0("A) GD (n = ", table(sp_df$source)[2], ")"), 
+       subtitle=paste("cluster obtained = ", length(nclus)))  + theme(legend.position="none", plot.margin = margin(0,0,0,0, "cm"))+
+  theme(plot.title = element_text(size=12))
+
+
+b <- xtabs(~cluster_den+source, data=sp_df, na.action=na.omit)
+nclus <- which(rowSums(b > 0) == 2)
+
+
+fig.2 <- ggmap(world) +
+  geom_point(data =sp_df, aes(x = long, y = lat, pch=factor(source)), size = 3) + 
+  geom_path(data = sp_df[which(sp_df$cluster_den %in% names(nclus)),], aes(x = long, y = lat, col=factor(cluster_den)), size=2) +
+  guides(color="none") +
+  scale_shape_manual(values=c(16,4)) +
+  geom_point(data =sp_df[which(sp_df$cluster_den %in% names(nclus)),], 
+             aes(x = long, y = lat, col=factor(cluster_den), pch=factor(source)), size = 3) +
+  labs(title=paste0("B) PD (n = ", table(sp_df$source)[1], ")"),
+       subtitle=paste("cluster obtained = ", length(nclus)))  + theme(legend.position="none", plot.margin = margin(0,0,0,0, "cm")) +
+  theme(plot.title = element_text(size=12))
+
+
+sp_df.1 <- sp_df[which(sp_df$distance.lowerthanDI),]
+sp_df.1 <- droplevels(sp_df.1)
+
+b <- xtabs(~cluster_center+source, data=sp_df.1)
+nclus <- which(rowSums(b > 0) == 2)
+
+fig.3 <- ggmap(world) +
+  geom_point(data =sp_df, aes(x = long, y = lat, pch=factor(source)), size = 3) + 
+  geom_path(data = sp_df.1[which(sp_df.1$cluster_center %in% names(nclus)),], aes(x = long, y = lat, col=factor(cluster_center)), size=2) +
+  guides(color="none") +
+  scale_shape_manual(values=c(16,4)) +
+  geom_point(data =sp_df.1[which(sp_df.1$cluster_center %in% names(nclus)),], 
+             aes(x = long, y = lat, col=factor(cluster_center), pch=factor(source)), size = 3) +
+  labs(title=paste0("C) dispersal distance (km) = ", unique(sp_df$DI) ),
+       subtitle=paste("cluster obtained = ", length(nclus)))  + theme(legend.position="none", plot.margin = margin(0,0,0,0, "cm")) +
+  theme(plot.title = element_text(size=12))
+
+# Create a text grob
+tgrob <- ggpubr::text_grob(paste(j),size = 13, face = "italic")
+# Draw the text
+plot_0 <- ggpubr::as_ggplot(tgrob) + theme(plot.margin = margin(0,0.5,0,0, "cm"))
+
+#final <- ggpubr::ggarrange(plot_0, NULL, NULL, fig.1, fig.2, fig.3, nrow=2, ncol=3, common.legend=TRUE, legend = "bottom", heights = c(0.1,1))
+#final <- ggpubr::ggarrange(fig.1, fig.2, fig.3, nrow=1, ncol=3, common.legend=TRUE, legend = "none") + theme(plot.margin = margin(0,2,0,0, "cm"))
+
+final <- ggpubr::ggarrange(fig.1,fig.2,fig.3, nrow=1, ncol=3) 
+
+mapp[[j]] <- final
+}
+
+#saveRDS(mapp, "Clustering_plots.rds")
+
+```
+
+#### By species {.tabset}
+
+```{r, results='asis', output.width='90%', echo = FALSE, fig_crop=FALSE}
+for (i in names(mapp)) {
+  cat("##### ",i,"\n")
+  par(mar=c(5,4,4,2))
+  
+  print(mapp[[i]] + theme(plot.margin=margin(1,4,0,0, "cm")))
+  
+
+  
+
+  cat(' \n \n')
+}
+```
+
+# Data summary
+
+```{r, include=FALSE}
+nrefgen <- tapply(gen_clus$ref.gen, gen_clus$sp, n_distinct)
+ncc <- tapply(gen_clus$cluster_center, gen_clus$sp, n_distinct)
+
+ref.den <- strsplit(gen_clus$ref.den, ",")
+gen_clus$ref.den2 <- ref.den
+
+ref.df <- data.frame(sp=with(gen_clus, rep(sp, vapply(ref.den2, length, 1L))), cluster_center=with(gen_clus, rep(cluster_center, vapply(ref.den2, length, 1L))))
+ref.df$ref.den <- trimws(unlist(ref.den))
+nrefden <- tapply(ref.df$ref.den, ref.df$sp, n_distinct)
+
+tabS1 <- cbind.data.frame(nrefgen, nrefden, ncc)
+tabS1$sp <- rownames(tabS1)
+
+gd_rec <- table(gen_clus$sp)
+clus_n <- tapply(gen_clus$cluster_center, gen_clus$sp,n_distinct)
+pd_rec <- aggregate(DP_n ~ sp, data = gen_clus, sum)
+
+boo <- cbind.data.frame(sp=names(gd_rec),gd_rec=as.vector(gd_rec),pd_rec=pd_rec[,2])
+tabS1 <- merge(tabS1, boo)
+
+```
+
+```{r, results='asis', echo=FALSE}
+kable(tabS1[,c(1,6,3,5,2,4)], caption="Table S1 : Data summarised for each species in cluster data set", col.names=c("Species","Density records","Density studies","Genetic div. records","Genetic div. studies","Number of clusters with density and genetic records"))
+```
+
+```{r, echo=F}
+nrefgen <- tapply(gen_count$ref, gen_count$sp, n_distinct)
+ncc <- tapply(gen_count$country, gen_count$sp, n_distinct)
+
+ref.den <- strsplit(gen_count$DP_ref, ",")
+gen_count$ref.den2 <- ref.den
+
+ref.df <- data.frame(sp=with(gen_count, rep(sp, vapply(ref.den2, length, 1L))), country=with(gen_count, rep(country, vapply(ref.den2, length, 1L))))
+ref.df$ref.den <- trimws(unlist(ref.den))
+nrefden <- tapply(ref.df$ref.den, ref.df$sp, n_distinct)
+
+tabS1.a <- cbind.data.frame(nrefgen, nrefden, ncc)
+tabS1.a$sp <- rownames(tabS1.a)
+
+gd_rec <- table(gen_count$sp)
+clus_n <- tapply(gen_count$country, gen_count$sp,n_distinct)
+pd_rec <- aggregate(DP_n ~ sp, data = unique(gen_count[,c("DP_n","SxC","sp")]), sum)
+
+boo <- cbind.data.frame(sp=names(gd_rec),gd_rec=as.vector(gd_rec),pd_rec=pd_rec[,2])
+tabS1.a <- merge(tabS1.a, boo)
+```
+
+```{r, include=T, results='asis', echo=F}
+kable(tabS1.a[,c(1,6,3,5,2,4)], caption="Table S1 : Data summarised for each species in country data set", col.names=c("Species","Density records","Density studies","Genetic div. records","Genetic div. studies","Number of countries with density and genetic records"))
+```
+
+
+```{r, include=F}
+head(tabS1.a)
+```
+
+
+There are `r sum(tabS1.a$pd_rec)` PD and `r sum(tabS1.a$gd_rec)` GD records from a total of `r sum(tabS1.a$nrefgen, tabS1.a$nrefden)` publications, across `r length(unique(tabS1$sp))` and `r length(unique(tabS1.a$sp))` in cluster and country dataset respectively.
+
+# Global map of cluster
+
+(as in Figure 1)
+
+```{r, include=F}
+BSdf <- unique(gen_count[,c("BS","sp")])
+BSdf$sp <- as.factor(BSdf$sp)
+BSdf$sp <- reorder(BSdf$sp, BSdf$BS)
+
+clus.res <- clus.res[clus.res$distance.lowerthanDI,]
+clus.res <- clus.res[!is.na(clus.res$cluster_center),]
+clus.res$BS <- NULL
+clus.res <- left_join(clus.res, BSdf[,c("BS","sp")])
+clus.res$sp <- factor(clus.res$sp, levels=unique(as.character(clus.res$sp)))
+
+
+no_green = c("#00007F", 
+             "#0000B2", "#0000E5", "#0019FF", "#004DFF", "#007FFF", "#00B2FF", 
+             "#00E5FF", "#7FFFFF", "#FFFFA5", "#FFFF54", 
+             "#FFE500", "#FFB300", "#FF7F00", "#FF4C00", "#FF1900", 
+             "#B20000", "#660000")
+
+no_green <- setNames(no_green, levels(BSdf$sp))
+
+# # get map
+library(ggmap)
+world <- map_data("world", wrap=c(-180,180))
+world <- world[-which(world$region == "Antarctica"),]
+# shade countries
+data_country <-  unique(as.character(gen_count$country))
+data_country <- gsub(".*Republic of ", "", data_country)
+count_data <- world[which(world$region %in% data_country | world$subregion %in% data_country),]
+
+setdiff(data_country, count_data$region)
+
+basemap <- ggplot(world, aes(x = long, y = lat, group = group)) +
+  # geom_tile(data = gplot_wrld_r, 
+  #                     aes(x = x, y = y, fill = value), inherit.aes = F, show.legend=F) + 
+  # scale_fill_gradient(low = "black", high = "white", na.value = "transparent") +
+  geom_polygon(fill = "transparent", colour = "darkgray", size=0.1) 
+
+
+sum.df <- clus.res
+sum.df$cc.sp <- paste(sum.df$sp, sum.df$cluster_center)
+boo <- xtabs(~cc.sp+source, data=sum.df)
+
+# Number of clusters with at least one density and genetic data
+nclus <- which(rowSums(boo > 0) == 2)
+
+sum.df <- sum.df[sum.df$cc.sp %in% names(nclus),]
+sum.df$source <- gsub("Popden", "Population density", sum.df$source)
+sum.df$source <- gsub("Popgen", "Population genetic", sum.df$source)
+
+# Add records in country dataset
+gp_df$SxC <- paste0(gp_df$sp, "_", gp_df$country)
+gp_df.1 <- gp_df[gp_df$SxC %in% intersect(gen_count$SxC, gp_df$SxC),]
+gp_df.1$source <- gsub("Popden", "Population density", gp_df.1$source)
+gp_df.1$source <- gsub("Popgen", "Population genetic", gp_df.1$source)
+
+map_clus <- basemap + geom_point(data=sum.df, aes(x=long, y=lat, group=cc.sp, col=sp, pch=source), size=1, show.legend=F ) +
+  geom_path(data = sum.df, aes(x = long, y = lat, col=sp, group=cc.sp), size = 0.5, lineend = "round", show.legend=FALSE) +
+  scale_shape_manual(values=c(16,4)) +
+  guides(shape = guide_legend(nrow=2, byrow=T)) +
+  scale_colour_manual(values = no_green[names(no_green) %in% gp_df.1$sp]) +
+  theme(axis.line=element_blank(),axis.text.x=element_blank(),
+        axis.text.y=element_blank(),axis.ticks=element_blank(),
+        axis.title.x=element_blank(),
+        axis.title.y=element_blank(),legend.position="bottom",
+        panel.background=element_blank(),panel.border=element_rect(color = "black",
+                                    fill = NA,
+                                    size = 1),panel.grid.major=element_blank(),
+        panel.grid.minor=element_blank(),plot.background=element_blank(),
+        plot.margin = unit(c(-1, -1, 0, -1), "cm"),
+        legend.title = element_blank(),
+        legend.key = element_blank())
+
+map_count <- basemap +
+  geom_polygon(data=count_data, fill = "grey", alpha=0.2, colour = "darkgray", size=0) +
+  geom_point(data=gp_df.1, aes(x=long, y=lat, col=sp, group=sp, pch=source), size=1, alpha=1)  +
+  scale_shape_manual(values=c(16,4), guide=guide_legend(nrow=2, byrow=T, override.aes=list(size=5), label.theme=element_text(size=9))) +
+  scale_colour_manual(values = no_green[names(no_green) %in% gp_df.1$sp], guide =
+                        guide_legend(override.aes=list(shape=15, size=4), nrow=3,
+                                                                     label.theme=element_text(size=9, 
+                                                                                              face="italic"))) +
+  theme(axis.line=element_blank(),axis.text.x=element_blank(),
+        axis.text.y=element_blank(),axis.ticks=element_blank(),
+        axis.title.x=element_blank(),
+        axis.title.y=element_blank(),legend.position="bottom",
+        panel.background=element_rect(color = NA,
+                                    fill = "white",
+                                    ),
+        panel.border=element_rect(color = "black",
+                                    fill = NA,
+                                    size = 1),panel.grid.major=element_blank(),
+        panel.grid.minor=element_blank(),plot.background=element_blank(),
+        plot.margin = unit(c(-0.5, -1, 0, -1), "cm"),
+        legend.title = element_blank(),
+        legend.key = element_blank())
+
+```
+
+```{r, echo=F, results='asis', out.width="0.3\\linewidth"}
+ggpubr::ggarrange(map_clus, map_count, nrow=2, heights=c(0.8,1.1), labels=c("A)","B)"))
+```
