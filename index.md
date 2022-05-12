@@ -1,7 +1,7 @@
 # Map of population genetic and density studies of felids. 
 
-Each symbol color represent a species. Click the symbols to identify the publication associated with the georeferenced populations. 
-The location of these populations were approximated and coordinates were rounded off at three decimals. Please refer to the studies and their authors for further information.
+Each symbol color represents a felid species. Click the symbols to identify the publication associated with the georeferenced populations. 
+The location of these populations were approximated and coordinates were rounded off at three decimals. Please refer to the studies for further information.
 
 Symbols in the map:
 
