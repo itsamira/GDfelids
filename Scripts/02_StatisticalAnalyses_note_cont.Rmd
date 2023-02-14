@@ -1,0 +1,334 @@
+---
+title: "02_StatisticalAnalyses_note_cont"
+author: "AmiraAz"
+date: '2023-01-17'
+output: html_document
+---
+
+```{r setup, echo=F}
+library(knitr)
+opts_chunk$set(warning = FALSE, root.dir = "/GDfelids")
+```
+
+```{r echo=T, message=F, include=T}
+# Load packages
+library(ggplot2)
+library(dplyr)
+library(lme4)
+library(lmerTest)
+library(boot)
+library(lmeresampler)
+
+options(na.action = na.omit)
+```
+
+## Load data
+
+```{r}
+load("/Data/Popgenden.rda")
+```
+
+2 data sets are in the .rda file `gen_clus` for the cluster data set and `gen_country` for the country data set.
+
+-   ref.gen format: FirstAuthor_FirstPublicationTitle_YearofPublication
+-   ref.den format: FirstAuthor_JournalName_YearofPublication
+-   average: AVE - only averaged GD available in the study, LOCUS - GD per locus is available and averaging the GD was done by Amira
+
+### 1. log10 transformed variables
+
+```{r}
+gen_clus$n.allele_log <- log10(gen_clus$n.allele)
+gen_clus$sample.size_log <- log10(gen_clus$sample.size)
+gen_clus$DP_log <- log10(gen_clus$DP_mean)
+gen_clus$BS_log <- log10(gen_clus$BS)
+
+gen_count$n.allele_log <- log10(gen_count$n.allele)
+gen_count$sample.size_log <- log10(gen_count$sample.size)
+gen_count$DP_log <- log10(gen_count$DP)
+gen_count$BS_log <- log10(gen_count$BS)
+```
+# Sample size effect
+
+
+```{r}
+tapply(gen_count$no.of.loci, gen_count$sp, summary)
+```
+
+# All data
+
+```{r}
+a1 <- lmer(ho ~ DP_log + (1|sp), data = gen_clus, na.action=na.omit)
+a2 <- lmer(he ~ DP_log + (1|sp), data = gen_clus, na.action=na.omit)
+a3 <- lmer(n.allele_log ~ DP_log + (1|sp), data = gen_clus, na.action=na.omit)
+
+lapply(list(a1, a2, a3), summary)
+```
+
+```{r}
+a4 <- lmer(ho ~ DP_log + (1|sp), data = gen_count, na.action=na.omit)
+a5 <- lmer(he ~ DP_log + (1|sp), data = gen_count, na.action=na.omit)
+a6 <- lmer(n.allele_log ~ DP_log + (1|sp), data = gen_count, na.action=na.omit)
+
+lapply(list(a4, a5, a6), summary)
+```
+
+
+
+
+
+# Case-resampling analysis 
+each bootstrap sample will contain randomly chosen observations from the original data, with remplacement
+
+## Using dataset with species with more than 5 records
+
+```{r}
+gd.df <- gen_clus[!is.na(gen_clus$ho),]
+sp.5 <- which(table(gd.df$sp) >= 5)
+ho.df <- gd.df[which(gd.df$sp %in% names(sp.5)),]
+mod1 <- lmer(ho ~ DP_log + (1|sp), data = ho.df)
+
+gd.df <- gen_clus[!is.na(gen_clus$he),]
+sp.5 <- which(table(gd.df$sp) >= 5)
+he.df <- gd.df[which(gd.df$sp %in% names(sp.5)),]
+mod2 <- lmer(he ~ DP_log + (1|sp), data = he.df)
+
+gd.df <- gen_clus[!is.na(gen_clus$n.allele),]
+sp.5 <- which(table(gd.df$sp) >= 5)
+na.df <- gd.df[which(gd.df$sp %in% names(sp.5)),]
+mod3 <- lmer(n.allele_log ~ DP_log + (1|sp), data = na.df)
+
+```
+
+
+# Testing three different cases or resamplings schemes
+ .f = fixef = returns the fixed effect parameters
+
+### Ho
+```{r}
+set.seed(1234)
+# version 1 : species were chosen at random (resampling at top-level only) meaning that some species could be left out
+lmer_boot.v1 <- bootstrap(mod1, .f = fixef, B = 100, type="case", resample = c(TRUE, FALSE))
+
+# version 2 : resampling done at the observation-level within a cluster (species were fixed and clusters/population were randomly sampled within species) 
+lmer_boot.v2 <- bootstrap(mod1, .f = fixef, B = 100, type="case", resample = c(FALSE, TRUE))
+
+# version 3 : resampling at both levels: species and clusters were sampled
+lmer_boot.v3 <- bootstrap(mod1, .f = fixef, B = 100, type="case", resample = c(TRUE, TRUE))
+
+sapply(list(lmer_boot.v1, lmer_boot.v2, lmer_boot.v3), summary)
+```
+
+```{r}
+confint(lmer_boot.v1, type="basic")
+plot(lmer_boot.v1, "DP_log") + labs(title="Distribution of log(DP)", x = "log(DP)")
+```
+
+```{r}
+confint(lmer_boot.v2, type="basic")
+plot(lmer_boot.v2, "DP_log") + labs(title="Distribution of log(DP)", x = "log(DP)")
+```
+~ this resampling scheme is the only one giving significant results (0 not included in the CI). In this case, clusters units were resampled within each species.
+
+```{r}
+confint(lmer_boot.v3, type="basic")
+plot(lmer_boot.v3, "DP_log") + labs(title="Distribution of log(DP)")
+```
+Notes: bootstrap sampling should somehow imitate the sampling process in your study. In this case, it can be argue that both level (species and their populations) are sampled randomly.
+
+### He
+```{r}
+set.seed(1234)
+# version 1 : species were chosen at random (resampling at top-level only) meaning that some species could be left out
+lmer_boot.v1 <- bootstrap(mod2, .f = fixef, B = 100, type="case", resample = c(TRUE, FALSE))
+
+# version 2 : resampling done at the observation-level within a cluster (species were fixed and clusters/population were randomly sampled within species) 
+lmer_boot.v2 <- bootstrap(mod2, .f = fixef, B = 100, type="case", resample = c(FALSE, TRUE))
+
+# version 3 : resampling at both levels: species and clusters were sampled
+lmer_boot.v3 <- bootstrap(mod2, .f = fixef, B = 100, type="case", resample = c(TRUE, TRUE))
+
+
+sapply(list(lmer_boot.v1, lmer_boot.v2, lmer_boot.v3), summary)
+```
+
+
+```{r}
+confint(lmer_boot.v1, type="basic")
+plot(lmer_boot.v1, "DP_log") + labs(title="Distribution of log(DP)", x = "log(DP)")
+```
+
+```{r}
+confint(lmer_boot.v2, type="basic")
+plot(lmer_boot.v2, "DP_log") + labs(title="Distribution of log(DP)", x = "log(DP)")
+```
+
+```{r}
+confint(lmer_boot.v3, type="basic")
+plot(lmer_boot.v3, "DP_log") + labs(title="Distribution of log(DP)")
+```
+
+### N allele
+```{r}
+# version 1 : species were chosen at random (resampling at top-level only) meaning that some species could be left out
+lmer_boot.v1 <- bootstrap(mod3, .f = fixef, B = 100, type="case", resample = c(TRUE, FALSE))
+
+# version 2 : resampling done at the observation-level within a cluster (species were fixed and clusters/population were randomly sampled within species) 
+lmer_boot.v2 <- bootstrap(mod3, .f = fixef, B = 100, type="case", resample = c(FALSE, TRUE))
+
+# version 3 : resampling at both levels: species and clusters were sampled
+lmer_boot.v3 <- bootstrap(mod3, .f = fixef, B = 100, type="case", resample = c(TRUE, TRUE))
+
+
+sapply(list(lmer_boot.v1, lmer_boot.v2, lmer_boot.v3), summary)
+```
+
+
+```{r}
+confint(lmer_boot.v1, type="basic")
+plot(lmer_boot.v1, "DP_log") + labs(title="Distribution of log(DP)", x = "log(DP)")
+```
+
+```{r}
+confint(lmer_boot.v2, type="basic")
+plot(lmer_boot.v2, "DP_log") + labs(title="Distribution of log(DP)", x = "log(DP)")
+```
+
+```{r}
+confint(lmer_boot.v3, type="basic")
+plot(lmer_boot.v3, "DP_log") + labs(title="Distribution of log(DP)")
+```
+
+## Bootstrap and return the p'value ??
+
+```{r}
+mypval <- function(.){
+  anova(.)$'Pr(>F)'[1]
+  }
+
+lmer_boot.pval <- bootstrap(mod1, .f = mypval, B = 100, type="case", resample = c(TRUE, FALSE))
+```
+Not working
+
+##
+Check the relationship within the Panthera genus
+
+```{r}
+mod1.P <- update(mod1, data = mod1@frame[grep("Panthera", mod1@frame$sp),])
+
+mod2.P <- update(mod2, data = mod2@frame[grep("Panthera", mod2@frame$sp),])
+
+mod3.P <- update(mod3, data = mod3@frame[grep("Panthera", mod3@frame$sp),])
+summary(mod3.P)
+```
+
+## Ho - Panthera
+```{r}
+# version 1 : species were chosen at random (resampling at top-level only) meaning that some species could be left out
+lmer_boot.v1.p <- bootstrap(mod1.P, .f = fixef, B = 100, type="case", resample = c(TRUE, FALSE))
+
+# version 2 : resampling done at the observation-level within a cluster (species were fixed and clusters/population were randomly sampled within species) 
+lmer_boot.v2.p <- bootstrap(mod1.P, .f = fixef, B = 100, type="case", resample = c(FALSE, TRUE))
+
+# version 3 : resampling at both levels: species and clusters were sampled
+lmer_boot.v3.p <- bootstrap(mod1.P, .f = fixef, B = 100, type="case", resample = c(TRUE, TRUE))
+
+confint(lmer_boot.v1.p, type="basic")
+
+
+confint(lmer_boot.v2.p, type="basic")
+
+
+
+confint(lmer_boot.v3.p, type="basic")
+```
+
+```{r}
+sapply(list(lmer_boot.v1, lmer_boot.v2, lmer_boot.v3), summary)
+
+```
+
+## He - Panthera
+```{r}
+# version 1 : species were chosen at random (resampling at top-level only) meaning that some species could be left out
+lmer_boot.v1.p <- bootstrap(mod2.P, .f = fixef, B = 100, type="case", resample = c(TRUE, FALSE))
+
+# version 2 : resampling done at the observation-level within a cluster (species were fixed and clusters/population were randomly sampled within species) 
+lmer_boot.v2.p <- bootstrap(mod2.P, .f = fixef, B = 100, type="case", resample = c(FALSE, TRUE))
+
+# version 3 : resampling at both levels: species and clusters were sampled
+lmer_boot.v3.p <- bootstrap(mod2.P, .f = fixef, B = 100, type="case", resample = c(TRUE, TRUE))
+
+confint(lmer_boot.v1.p, type="basic")
+
+
+confint(lmer_boot.v2.p, type="basic")
+
+
+
+confint(lmer_boot.v3.p, type="basic")
+```
+
+```{r}
+sapply(list(lmer_boot.v1, lmer_boot.v2, lmer_boot.v3), summary)
+
+```
+## MNA - Panthera
+```{r}
+# version 1 : species were chosen at random (resampling at top-level only) meaning that some species could be left out
+lmer_boot.v1.p <- bootstrap(mod3.P, .f = fixef, B = 100, type="case", resample = c(TRUE, FALSE))
+
+# version 2 : resampling done at the observation-level within a cluster (species were fixed and clusters/population were randomly sampled within species) 
+lmer_boot.v2.p <- bootstrap(mod3.P, .f = fixef, B = 100, type="case", resample = c(FALSE, TRUE))
+
+# version 3 : resampling at both levels: species and clusters were sampled
+lmer_boot.v3.p <- bootstrap(mod3.P, .f = fixef, B = 100, type="case", resample = c(TRUE, TRUE))
+
+confint(lmer_boot.v1.p, type="basic")
+
+
+confint(lmer_boot.v2.p, type="basic")
+
+
+
+confint(lmer_boot.v3.p, type="basic")
+```
+
+```{r}
+sapply(list(lmer_boot.v1, lmer_boot.v2, lmer_boot.v3), summary)
+
+```
+
+```{r}
+# add other covariates
+mod3.P_full <- update(mod3.P, . ~ . + GL + sample.size_log, data = na.df[grep("Panthera", na.df$sp),])
+
+```
+
+
+
+
+```{r}
+
+test.mod <- lmer(n.allele_log ~ DP_log + (1|sp) + (1|redlistCategory) + (1|country), data = gen_clus, na.action = na.omit)
+
+test.df <- as.data.frame(VarCorr(test.mod))
+
+res.sum <- sum(test.df$vcov)
+
+test.df$vcov / res.sum * 100
+
+```
+
+## After removing country-level data
+```{r}
+clus <- readRDS("Data/Popgenden_no_country.rds")
+
+x.1 <- lmer(ho ~ DP_log + (1|sp), data = clus, na.action = na.omit)
+x.2 <- lmer(he ~ DP_log + (1|sp), data = clus, na.action = na.omit)
+x.3 <- lmer(log10(n.allele) ~ DP_log + (1|sp), data = clus, na.action = na.omit)
+lapply(list(x.1, x.2, x.3), summary)
+
+```
+
+
+

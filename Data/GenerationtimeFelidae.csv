@@ -1,0 +1,37 @@
+Scientific_name,AdultBodyMass_g,Sources_AdultBodyMass,Max_longevity_d,Sources_Max_longevity,Rspan_d,AFR_d,Data_AFR,Calculated_GL_d,GenerationLength_d,Sources_GL
+Leopardus jacobita,8133.78,Verde Arregoitia et al. 2013,4015,Carn_ung,3693,322,calculated,1392.97,1392.97,Rspan-ASMmales
+Lynx pardinus,11050,PanTHERIA,4380,Carn_ung,3946,434,calculated,1578.34,1578.34,Rspan-ASMmales
+Felis nigripes,1362.77,PanTHERIA,4818,PanTHERIA;AnAge; Carn_ung,4600.17,351.33,calculated,1685.3793,1685.3793,Rspan-AFR(SM+Gest)
+Felis margarita,2823.36,PanTHERIA,5073.5,AnAge; Carn_ung,4708.5,365,calculated,1730.465,1730.465,Rspan-ASMmales
+Pardofelis marmorata,2826.68,PanTHERIA,4380,Carn_ung,3604,776,calculated,1821.16,1821.16,Rspan-ASMmales
+Caracal aurata,12400,Smith et al. 2003,7482.5,AnAge;Carn_Ung,7117.5,365,calculated,2429.075,1825,GMA
+Felis chaus,7157.99,PanTHERIA,5353.3333333,PanTHERIA;AnAge; Carn_ung,5031.5933333,444.62,calculated,1903.7820667,1903.782066657,Rspan-AFR(SM+Gest)
+Otocolobus manul,3500,Smith et al. 2003,5456.75,AnAge; Carn_ung,4817.75,639,calculated,2036.1475,2036.1475,Rspan-ASMmales
+Prionailurus rubiginosus,1418.75,PanTHERIA,6533.5,AnAge; Carn_ung,6168.5,365,calculated,2153.865,2153.865,Rspan-ASMmales
+Acinonyx jubatus,50577.92,PanTHERIA,7117.5,PanTHERIA;AnAge;Carn_Ung,5900.23,1217.27,PanTHERIA,2928.3367,2190,GMA
+Leopardus guigna,2200,Smith et al. 2003,6205,Carn_Ung,no information,456,calculated,no information,2190,GMA
+Leopardus tigrinus,2250,Smith et al. 2003,7993.5,AnAge;Carn_Ung,7153.5,840,calculated,2914.515,2190,GMA
+Leopardus wiedii,3270.81,PanTHERIA,7786.6666667,PanTHERIA;AnAge;Carn_Ung,7056.6666667,730,calculated,2776.4333333,2190,GMA
+Panthera leo,158623.9,PanTHERIA,10585,PanTHERIA;AnAge;Carn_Ung,9537.45,1047.55,PanTHERIA,3813.4105,2190,GMA
+Catopuma badia,3500,Smith et al. 2003,8285.5,Carn_Ung,7712.5,573,calculated,2809.625,2190,GMA
+Prionailurus planiceps,3533.76,PanTHERIA,5110,AnAge;Carn_Ung,4441,669,calculated,1956.89,2190,GMA
+Prionailurus viverrinus,8826.46,PanTHERIA,4526,PanTHERIA;AnAge;Carn_Ung,4222,304,calculated,1528.38,2190,GMA
+Caracal caracal,11964.38,PanTHERIA,6606.5,PanTHERIA;AnAge; Carn_ung,6150.25,456.25,PanTHERIA,2239.8225,2239.8225,Rspan-AFB
+Herpailurus yagouaroundi,6875,PanTHERIA,4855.1083333,PanTHERIA;AnAge; Carn_ung,3876.8333333,1126.285,calculated,2250.5666667,2250.566666657,Rspan-AFR(SM+Gest)
+Prionailurus bengalensis,2780.97,PanTHERIA,5718.3333333,PanTHERIA;AnAge; Carn_ung,4929.1133333,921.4,calculated,2350.8428667,2350.842866657,Rspan-AFR(SM+Gest)
+Catopuma temminckii,13500,Animal Diversity,6691.6666667,PanTHERIA;AnAge; Carn_ung,6052.6666667,639,calculated,2394.2733333,2394.273333343,Rspan-ASMmales
+Neofelis nebulosa,14945.05,PanTHERIA,6545.6666667,PanTHERIA;AnAge; Carn_ung,5883.4066667,844.7,calculated,2550.8879333,2550.887933343,Rspan-AFR(SM+Gest)
+Leopardus colocolo,5000,Smith et al. 2003,7154,AnAge; Carn_ung,6424,730,calculated,2592.96,2592.96,Rspan-ASMmales
+Neofelis diardi,22500,Animal Diversity,7300,Carn_ung,6529,771,calculated,2664.41,2664.41,Rspan-ASMmales
+Puma concolor,53954.05,PanTHERIA,7762.3333333,PanTHERIA;AnAge; Carn_ung,7138.7933333,623.54,PanTHERIA,2693.7900667,2693.790066657,Rspan-AFB
+Leopardus geoffroyi,4000,Smith et al. 2003,8395,AnAge; Carn_ung,7841,554,calculated,2827.89,2827.89,Rspan-AFR(SM+Gest)
+Felis silvestris,4573.08,PanTHERIA,9125,PanTHERIA;AnAge; Carn_ung,8760,365,PanTHERIA,2905.4,2905.4,Rspan-AFB
+Panthera tigris,161914.7,PanTHERIA,9599.5,PanTHERIA;AnAge;Carn_Ung,8382.84,1216.66,PanTHERIA,3647.6836,2920,GMA
+Panthera uncia,41000,Smith et al. 2003,7567.6666667,PanTHERIA;AnAge;Carn_Ung,6781.7566667,785.91,calculated,2752.6194333,2920,GMA
+Leopardus pardalis,11880,PanTHERIA,8370.6666667,PanTHERIA;AnAge; Carn_ung,7771.5216667,758.135,calculated,3011.8762833,3011.876283343,Rspan-AFR(SM+Gest)
+Leptailurus serval,11999.96,PanTHERIA,8322,PanTHERIA;AnAge; Carn_ung,7470.34,851.66,PanTHERIA,3018.0586,3018.0586,Rspan-AFB
+Lynx lynx,19300,PanTHERIA,9404.8333333,PanTHERIA;AnAge; Carn_ung,8731.8083333,806.015,calculated,3338.2394167,3338.239416657,Rspan-AFR(SM+Gest)
+Lynx canadensis,9682.82,PanTHERIA,9769.8333333,PanTHERIA;AnAge; Carn_ung,9159.6833333,735.65,calculated,3391.9581667,3391.958166657,Rspan-AFR(SM+Gest)
+Panthera pardus,52399.99,PanTHERIA,8918.1666667,PanTHERIA;AnAge; Carn_ung,7771.1566667,1147.01,PanTHERIA,3400.6454333,3400.645433343,Rspan-AFB
+Panthera onca,83943.09,PanTHERIA,9003.3333333,PanTHERIA;AnAge; Carn_ung,7919.9183333,1284.905,calculated,3581.6813167,3581.681316657,Rspan-AFR(SM+Gest)
+Lynx rufus,6374.47,PanTHERIA,11797.611111,PanTHERIA;AnAge; Carn_ung,11250.111111,547.5,PanTHERIA,3810.0322222,3810.03222219,Rspan-AFB

@@ -1,0 +1,269 @@
+internalTaxonId,scientificName,name,language,main
+219,Acinonyx jubatus,Hunting Leopard,English,false
+219,Acinonyx jubatus,Chita,Spanish; Castilian,false
+219,Acinonyx jubatus,Gepard,German,false
+219,Acinonyx jubatus,Guépard,French,false
+219,Acinonyx jubatus,Guepardo,Spanish; Castilian,false
+219,Acinonyx jubatus,Cheetah,English,true
+8539,Felis bieti,Chinese Alpine Steppe Cat,English,false
+8539,Felis bieti,Chinese Desert Cat,English,false
+8539,Felis bieti,Chinese Steppe Cat,English,false
+8539,Felis bieti,Grass Cat,English,false
+8539,Felis bieti,Cao Shili,Chinese,false
+8539,Felis bieti,Chat de Biet,French,false
+8539,Felis bieti,Gato de Biet,Spanish; Castilian,false
+8539,Felis bieti,Gato del Desierto de China,Spanish; Castilian,false
+8539,Felis bieti,Mo Mao,Chinese,false
+8539,Felis bieti,Chinese Mountain Cat,English,true
+8540,Felis chaus,Reed Cat,English,false
+8540,Felis chaus,Swamp Cat,English,false
+8540,Felis chaus,Chat de jungle,French,false
+8540,Felis chaus,Chat des Marais,French,false
+8540,Felis chaus,Gato de la Jungla,Spanish; Castilian,false
+8540,Felis chaus,Gato de los Pantanos,Spanish; Castilian,false
+8540,Felis chaus,Jungle Cat,English,true
+8541,Felis margarita,Sand Dune Cat,English,false
+8541,Felis margarita,Chat des sables,French,false
+8541,Felis margarita,Gato de las Arenas,Spanish; Castilian,false
+8541,Felis margarita,Gato del Sahara,Spanish; Castilian,false
+8541,Felis margarita,pshaya koshka,Russian,false
+8541,Felis margarita,Qit al rimal,Arabic,false
+8541,Felis margarita,Sand Cat,English,true
+60354712,Felis silvestris,Wildcat,English,false
+60354712,Felis silvestris,Al qit,Arabic,false
+60354712,Felis silvestris,Chat orné,French,false
+60354712,Felis silvestris,Chat sauvage,French,false
+60354712,Felis silvestris,Gato Montés,Spanish; Castilian,false
+60354712,Felis silvestris,Gato Silvestre,Spanish; Castilian,false
+60354712,Felis silvestris,Wild Cat,English,true
+9948,Herpailurus yagouaroundi,Eyra Cat,English,false
+9948,Herpailurus yagouaroundi,Gato Colorado,Spanish; Castilian,false
+9948,Herpailurus yagouaroundi,Gato Moro,Spanish; Castilian,false
+9948,Herpailurus yagouaroundi,Gato-mourisco,Portuguese,false
+9948,Herpailurus yagouaroundi,Gato-vermelho,Portuguese,false
+9948,Herpailurus yagouaroundi,Jaguarundi,Spanish; Castilian,false
+9948,Herpailurus yagouaroundi,León Brenero,Spanish; Castilian,false
+9948,Herpailurus yagouaroundi,Leoncillo,Spanish; Castilian,false
+9948,Herpailurus yagouaroundi,Onza,Spanish; Castilian,false
+9948,Herpailurus yagouaroundi,Tigrillo,Spanish; Castilian,false
+9948,Herpailurus yagouaroundi,Yaguarundi,Spanish; Castilian,false
+9948,Herpailurus yagouaroundi,Yaguarundí,Spanish; Castilian,false
+9948,Herpailurus yagouaroundi,Jaguarundi,English,true
+54012637,Leopardus tigrinus,Chat tigre du nord,French,false
+54012637,Leopardus tigrinus,Gato-do-mato,Portuguese,false
+54012637,Leopardus tigrinus,Gato-maracajá,Portuguese,false
+54012637,Leopardus tigrinus,Gato Tigre,Spanish; Castilian,false
+54012637,Leopardus tigrinus,Maracajá-í,Portuguese,false
+54012637,Leopardus tigrinus,Pintadinho,Portuguese,false
+54012637,Leopardus tigrinus,Tigrillo,Spanish; Castilian,false
+54012637,Leopardus tigrinus,Tirica,Spanish; Castilian,false
+54012637,Leopardus tigrinus,Northern Tiger Cat,English,true
+11511,Leopardus wiedii,Tree Ocelot,English,false
+11511,Leopardus wiedii,Caucel,Spanish; Castilian,false
+11511,Leopardus wiedii,Gato Montés,Spanish; Castilian,false
+11511,Leopardus wiedii,Gato Pintado,Spanish; Castilian,false
+11511,Leopardus wiedii,Tigrillo,Spanish; Castilian,false
+11511,Leopardus wiedii,Margay,English,true
+12521,Lynx rufus,Bay Lynx,English,false
+12521,Lynx rufus,Chat sauvage,French,false
+12521,Lynx rufus,Gato Montés,Spanish; Castilian,false
+12521,Lynx rufus,Lince,Spanish; Castilian,false
+12521,Lynx rufus,Lince Rojo,Spanish; Castilian,false
+12521,Lynx rufus,Lynx roux,French,false
+12521,Lynx rufus,Bobcat,English,true
+15310,Leopardus geoffroyi,Chat de Geoffroy,French,false
+15310,Leopardus geoffroyi,Gato de Mato,Spanish; Castilian,false
+15310,Leopardus geoffroyi,Gato Montés Común,Spanish; Castilian,false
+15310,Leopardus geoffroyi,Geoffroy's Cat,English,true
+15311,Leopardus guigna,Chilean Cat,English,false
+15311,Leopardus guigna,Kodkod,English,false
+15311,Leopardus guigna,Guigna,French,false
+15311,Leopardus guigna,Guina,Spanish; Castilian,false
+15311,Leopardus guigna,Guiña,English,true
+15452,Leopardus jacobita,Andean Mountain Cat,English,false
+15452,Leopardus jacobita,Mountain Cat,English,false
+15452,Leopardus jacobita,Chat des Andes,French,false
+15452,Leopardus jacobita,Chinchay,Spanish; Castilian,false
+15452,Leopardus jacobita,Gato Andino,Spanish; Castilian,false
+15452,Leopardus jacobita,Gato Lince,Spanish; Castilian,false
+15452,Leopardus jacobita,Osjo,Quechua,false
+15452,Leopardus jacobita,Titi,Aymara,false
+15452,Leopardus jacobita,Andean Cat,English,true
+15955,Panthera tigris,Bagh,Hindi,false
+15955,Panthera tigris,Harimau,Indonesian,false
+15955,Panthera tigris,Laohu,Chinese,false
+15955,Panthera tigris,Tigr,Russian,false
+15955,Panthera tigris,Tigre,French,false
+15955,Panthera tigris,Tiger,English,true
+18146,Prionailurus bengalensis,Chat de Chine,French,false
+18146,Prionailurus bengalensis,Chat-léopard du Bengale,French,false
+18146,Prionailurus bengalensis,Gato Bengalí,Spanish; Castilian,false
+18146,Prionailurus bengalensis,Gato de Bengala,Spanish; Castilian,false
+18146,Prionailurus bengalensis,Leopard Cat,English,true
+18148,Prionailurus planiceps,Chat à tête plate,French,false
+18148,Prionailurus planiceps,Gato Cabeciancho,Spanish; Castilian,false
+18148,Prionailurus planiceps,Kucing Tandang,Indonesian,false
+18148,Prionailurus planiceps,Flat-headed Cat,English,true
+18149,Prionailurus rubiginosus,Chat-léopard de l'Inde,French,false
+18149,Prionailurus rubiginosus,Chat rougeâtre,French,false
+18149,Prionailurus rubiginosus,Chat rubigineux,French,false
+18149,Prionailurus rubiginosus,Gato Rojizo,Spanish; Castilian,false
+18149,Prionailurus rubiginosus,Gato Rubiginosa,Spanish; Castilian,false
+18149,Prionailurus rubiginosus,Rusty-spotted Cat,English,true
+18150,Prionailurus viverrinus,Chat Pêcheur,French,false
+18150,Prionailurus viverrinus,Gato Pescador,Spanish; Castilian,false
+18150,Prionailurus viverrinus,Fishing Cat,English,true
+18306,Caracal aurata,Golden Cat,English,false
+18306,Caracal aurata,Afrikanische Goldkatze,German,false
+18306,Caracal aurata,Chat doré,French,false
+18306,Caracal aurata,Chat doré Africain,French,false
+18306,Caracal aurata,Gato Dorado,Spanish; Castilian,false
+18306,Caracal aurata,African Golden Cat,English,true
+22732,Panthera uncia,Ounce,English,false
+22732,Panthera uncia,Akilbirs,Kirghiz; Kyrgyz,false
+22732,Panthera uncia,Babri barfi,Tajik,false
+22732,Panthera uncia,Baral he,Hindi,false
+22732,Panthera uncia,Barfani chita,Urdu,false
+22732,Panthera uncia,Hiun chituwa,Nepali,false
+22732,Panthera uncia,Ilbirs,Kirghiz; Kyrgyz,false
+22732,Panthera uncia,Irbis,Kazakh,false
+22732,Panthera uncia,Irbis,Russian,false
+22732,Panthera uncia,Irvis,Mongolian,false
+22732,Panthera uncia,Léopard des neiges,French,false
+22732,Panthera uncia,Once,French,false
+22732,Panthera uncia,Pantera de la Nieves,Spanish; Castilian,false
+22732,Panthera uncia,Panthère des neiges,French,false
+22732,Panthera uncia,Sah,Tibetan,false
+22732,Panthera uncia,Schneeleopard,German,false
+22732,Panthera uncia,Snezhniy bars,Russian,false
+22732,Panthera uncia,Xue bào,Chinese,false
+22732,Panthera uncia,Snow Leopard,English,true
+54010476,Leopardus guttulus,Southern Little Spotted Cat,English,false
+54010476,Leopardus guttulus,Chat tigre du sud,French,false
+54010476,Leopardus guttulus,Gato-do-mato,Portuguese,false
+54010476,Leopardus guttulus,Mbaracayá,Guarani,false
+54010476,Leopardus guttulus,Mbaracayá-miú,Guarani,false
+54010476,Leopardus guttulus,Tirica,Spanish; Castilian,false
+54010476,Leopardus guttulus,Southern Tiger Cat,English,true
+16218,Pardofelis marmorata,Chat marbré,French,false
+16218,Pardofelis marmorata,Gato Jaspeado,Spanish; Castilian,false
+16218,Pardofelis marmorata,Kucing Batu,Indonesian,false
+16218,Pardofelis marmorata,Marbled Cat,English,true
+4038,Catopuma temminckii,Golden Cat,English,false
+4038,Catopuma temminckii,Temminck's Cat,English,false
+4038,Catopuma temminckii,Asiatische Goldkatze,German,false
+4038,Catopuma temminckii,Chat de Temminck,French,false
+4038,Catopuma temminckii,Chat doré d'Asie,French,false
+4038,Catopuma temminckii,Gato Dorado Asiático,Spanish; Castilian,false
+4038,Catopuma temminckii,Asiatic Golden Cat,English,true
+15309,Leopardus colocolo,Chilean Pampa Cat,English,false
+15309,Leopardus colocolo,Chat des Pampas,French,false
+15309,Leopardus colocolo,Gato de los Pajonales,Spanish; Castilian,false
+15309,Leopardus colocolo,Gato Pajero,Spanish; Castilian,false
+15309,Leopardus colocolo,Gato-palheiro,Portuguese,false
+15309,Leopardus colocolo,Osjo,Quechua,false
+15309,Leopardus colocolo,Pampas Cat,English,true
+11509,Leopardus pardalis,Gato Onza,Spanish; Castilian,false
+11509,Leopardus pardalis,Manigordo,Spanish; Castilian,false
+11509,Leopardus pardalis,Ocelote,Spanish; Castilian,false
+11509,Leopardus pardalis,Tigrillo,Spanish; Castilian,false
+11509,Leopardus pardalis,Ocelot,English,true
+136603,Neofelis diardi,Enkuli Clouded Leopard,English,false
+136603,Neofelis diardi,Sunda Clouded Leopard,English,false
+136603,Neofelis diardi,Sunda Islands Clouded Leopard,English,false
+136603,Neofelis diardi,Sundaland Clouded Leopard,English,false
+136603,Neofelis diardi,Harimau Dahan,Indonesian,false
+136603,Neofelis diardi,Sunda Clouded Leopard,English,true
+14519,Neofelis nebulosa,Pantera del Himalaya,Spanish; Castilian,false
+14519,Neofelis nebulosa,Pantera Longibanda,Spanish; Castilian,false
+14519,Neofelis nebulosa,Pantera Nebulosa,Spanish; Castilian,false
+14519,Neofelis nebulosa,Panthère longibande,French,false
+14519,Neofelis nebulosa,Panthère nébuleuse,French,false
+14519,Neofelis nebulosa,Yun Bao,Chinese,false
+14519,Neofelis nebulosa,Clouded Leopard,English,true
+18868,Puma concolor,Cougar,English,false
+18868,Puma concolor,Deer Tiger,English,false
+18868,Puma concolor,Mountain Lion,English,false
+18868,Puma concolor,Red Tiger,English,false
+18868,Puma concolor,León Americano,Spanish; Castilian,false
+18868,Puma concolor,León Bayo,Spanish; Castilian,false
+18868,Puma concolor,León Colorado,Spanish; Castilian,false
+18868,Puma concolor,León De Montaña,Spanish; Castilian,false
+18868,Puma concolor,Mitzli,Spanish; Castilian,false
+18868,Puma concolor,Onza Bermeja,Spanish; Castilian,false
+18868,Puma concolor,Puma,English,true
+12518,Lynx canadensis,American Lynx,English,false
+12518,Lynx canadensis,Lince del Canadá,Spanish; Castilian,false
+12518,Lynx canadensis,Lince del Canadá,Spanish; Castilian,false
+12518,Lynx canadensis,Lynx du Canada,French,false
+12518,Lynx canadensis,Canada Lynx,English,true
+3847,Caracal caracal,African Caracal,English,false
+3847,Caracal caracal,Asian Caracal,English,false
+3847,Caracal caracal,Desert Lynx,English,false
+3847,Caracal caracal,Anaq al ardh,Arabic,false
+3847,Caracal caracal,Karakal,German,false
+3847,Caracal caracal,Lince Africano,Spanish; Castilian,false
+3847,Caracal caracal,Lynx Du Désert,French,false
+3847,Caracal caracal,Washeq,Arabic,false
+3847,Caracal caracal,Wüstenluchs,German,false
+3847,Caracal caracal,Caracal,English,true
+4037,Catopuma badia,Bay Cat,English,false
+4037,Catopuma badia,Bornean Bay Cat,English,false
+4037,Catopuma badia,Borneo-Goldkatze,German,false
+4037,Catopuma badia,Borneo-katze,German,false
+4037,Catopuma badia,Chat bai,French,false
+4037,Catopuma badia,Gato Rojo de Borneo,Spanish; Castilian,false
+4037,Catopuma badia,Kucing Merah,Indonesian,false
+4037,Catopuma badia,Borneo Bay Cat,English,true
+15951,Panthera leo,African Lion,English,false
+15951,Panthera leo,Leao,Portuguese,false
+15951,Panthera leo,León,Spanish; Castilian,false
+15951,Panthera leo,Lion d'Afrique,French,false
+15951,Panthera leo,Simba,Swahili,false
+15951,Panthera leo,Lion,English,true
+12519,Lynx lynx,Evroasiin Shiluus,Mongolian,false
+12519,Lynx lynx,Lince,Spanish; Castilian,false
+12519,Lynx lynx,Lince Boreal,Spanish; Castilian,false
+12519,Lynx lynx,Lynx,French,false
+12519,Lynx lynx,Lynx Boréal,French,false
+12519,Lynx lynx,Shiluus Mii,Mongolian,false
+12519,Lynx lynx,Eurasian Lynx,English,true
+15953,Panthera onca,Onca,Portuguese,false
+15953,Panthera onca,Otorongo,Spanish; Castilian,false
+15953,Panthera onca,Tigre,Spanish; Castilian,false
+15953,Panthera onca,Tigre Americano,Spanish; Castilian,false
+15953,Panthera onca,Tigre mariposo,Spanish; Castilian,false
+15953,Panthera onca,Tigre Real,Spanish; Castilian,false
+15953,Panthera onca,Yaguar,Spanish; Castilian,false
+15953,Panthera onca,Yaguareté,Spanish; Castilian,false
+15953,Panthera onca,Jaguar,English,true
+11638,Leptailurus serval,Chat-tigre,French,false
+11638,Leptailurus serval,Serval,English,true
+15954,Panthera pardus,Al nimr,Arabic,false
+15954,Panthera pardus,Léopard,French,false
+15954,Panthera pardus,Leopardo,Spanish; Castilian,false
+15954,Panthera pardus,Pantera,Spanish; Castilian,false
+15954,Panthera pardus,Panthère,French,false
+15954,Panthera pardus,Leopard,English,true
+12520,Lynx pardinus,Pardel Lynx,English,false
+12520,Lynx pardinus,Spanish Lynx,English,false
+12520,Lynx pardinus,Lince Ibérico,Spanish; Castilian,false
+12520,Lynx pardinus,Lynx d'Espagne,French,false
+12520,Lynx pardinus,Lynx pardelle,French,false
+12520,Lynx pardinus,Iberian Lynx,English,true
+8542,Felis nigripes,Small-spotted Cat,English,false
+8542,Felis nigripes,Chat à pieds noirs,French,false
+8542,Felis nigripes,Gato de Pies Negros,Spanish; Castilian,false
+8542,Felis nigripes,Gato Patinegro,Spanish; Castilian,false
+8542,Felis nigripes,Ingwe Yeziduli ,Xhosa,false
+8542,Felis nigripes,"Klein Gekolde Kat, Swart-poot Kat, Miershooptier ",Afrikaans,false
+8542,Felis nigripes,Black-footed Cat,English,true
+15640,Otocolobus manul,Manul,English,false
+15640,Otocolobus manul,Chat manul,French,false
+15640,Otocolobus manul,Dromba,Tibetan,false
+15640,Otocolobus manul,"Gato de Pallas, Gato manul",Spanish; Castilian,false
+15640,Otocolobus manul,Gorbe-ye-Palas,Persian,false
+15640,Otocolobus manul,Manul,Mongolian,false
+15640,Otocolobus manul,Sabanshy,Kazakh,false
+15640,Otocolobus manul,Манул [manul],Russian,false
+15640,Otocolobus manul,Pallas's Cat,English,true

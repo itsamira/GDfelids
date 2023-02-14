@@ -13,7 +13,11 @@ output:
 
 ```{r setup, echo=F}
 library(knitr)
+<<<<<<< HEAD
+opts_chunk$set(warning = FALSE, root.dir = "/GDfelids")
+=======
 opts_chunk$set(warning = FALSE)
+>>>>>>> ebf65551c38edf2407127bdc51f5068fbfd7b24c
 ```
 
 ```{r echo=T, message=F, include=T}
@@ -37,7 +41,7 @@ load("Data/Popgenden.rda")
 -   ref.den format: FirstAuthor_JournalName_YearofPublication
 -   average: AVE - only averaged GD available in the study, LOCUS - GD per locus is available and averaging the GD was done by Amira
 
-1.  log10 transformed variables
+### 1. log10 transformed variables
 
 ```{r}
 gen_clus$n.allele_log <- log10(gen_clus$n.allele)
@@ -51,9 +55,9 @@ gen_count$DP_log <- log10(gen_count$DP)
 gen_count$BS_log <- log10(gen_count$BS)
 ```
 
-2.  Plot the distribution of each variable
+### 2. Plot the distribution of each variable
 
-#### a)  Cluster data set {.tabset}
+#### a) Cluster data set {.tabset}
 
 ```{r, results='asis', echo=F}
 for (i in 1:4) {
@@ -68,7 +72,7 @@ for (i in 1:4) {
 }
 ```
 
-#### b)  Country data set {.tabset}
+#### b) Country data set {.tabset}
 
 ```{r, results='asis', echo=F}
 for (i in 1:4) {
@@ -83,14 +87,15 @@ for (i in 1:4) {
 }
 ```
 
-###
-
-
-
-3.  Simple correlation test with sample size (mean number of individuals sampled for the GD estimates)
+### 3.  Simple correlation test with sample size 
+sample size refers to the mean number of individuals sampled for the GD estimates
 
 -   $H_o$ No correlation between GD and sample size size
 -   $H_1$ GD increases with sample size
+
+```{r}
+ggplot(data=gen_clus) + geom_point(aes(x=sp, y=sample.size))
+```
 
 ```{r}
 # Pearson correlation coefficient
@@ -98,6 +103,18 @@ c1 <- cor.test(gen_clus$ho, log10(gen_clus$sample.size), method = "pearson", alt
 c2 <- cor.test(gen_clus$he, log10(gen_clus$sample.size), method = "pearson", alt="g")[c("p.value","estimate")] 
 c3 <- cor.test(gen_clus$n.allele, log10(gen_clus$sample.size), method = "pearson", alt="g")[c("p.value","estimate")]
 ```
+
+# Remove data with more than 200 individuals
+```{r}
+#gen_clus <- gen_clus[!gen_clus$sample.size > 100,]
+
+# Pearson correlation coefficient
+c1 <- cor.test(gen_clus$ho, log10(gen_clus$sample.size), method = "pearson", alt="g")[c("p.value","estimate")]
+c2 <- cor.test(gen_clus$he, log10(gen_clus$sample.size), method = "pearson", alt="g")[c("p.value","estimate")] 
+c3 <- cor.test(gen_clus$n.allele, log10(gen_clus$sample.size), method = "pearson", alt="g")[c("p.value","estimate")]
+
+```
+
 
 ```{r, echo=F, results='asis'}
 kable(rbind.data.frame(HoxSS=c1,HexSS=c2,ArxSS=c3))
@@ -125,25 +142,43 @@ theme_set(theme_classic())
 
 ```
 
+###4.  Outlier detections
+Remove outliers in cluster dataset using the boxplot 
 
-4.  Remove outliers in cluster dataset using the boxplot
-Boxplots before outliers were removed
+*boxplots before outliers were removed*
+
 ```{r, results='asis'}
 par(mar=c(9,4,1,2))
 boxplot(gen_clus$DP_log~gen_clus$sp,   xlab=NA, las=2, col=no_green[names(no_green) %in% unique(gen_clus$sp)], ylab="log10(PD)")
-abline(h=mean(gen_clus$DP_log), lty=2)
+abline(h=mean(gen_clus$DP_log, na.rm=T), lty=2)
 
-boxplot(gen_clus$ho~gen_clus$sp, col=no_green[names(no_green) %in% unique(gen_clus$sp)] , xlab=NA,  las=2, ylab="Ho")
+boxplot(gen_clus$ho~gen_clus$sp, col=no_green[names(no_green) %in% unique(gen_clus$sp)] , xlab=NA,  las=2, ylab="Ho", na.action = na.omit)
 abline(h=mean(gen_clus$ho, na.rm=T), lty=2)
 
-boxplot(gen_clus$he~gen_clus$sp, col=no_green[names(no_green) %in% unique(gen_clus$sp)], las=2, xlab=NA,  ylab="He",)
+boxplot(gen_clus$he~gen_clus$sp, col=no_green[names(no_green) %in% unique(gen_clus$sp)], las=2, xlab=NA,  ylab="He", na.action = na.omit)
 abline(h=mean(gen_clus$he, na.rm=T), lty=2)
 
-boxplot(log10(gen_clus$n.allele)~gen_clus$sp, col=no_green[names(no_green) %in% unique(gen_clus$sp)], las=2, xlab=NA,cex=1,  ylab="log10(n.allele)")
+boxplot(log10(gen_clus$n.allele)~gen_clus$sp, col=no_green[names(no_green) %in% unique(gen_clus$sp)], las=2, xlab=NA,cex=1,  ylab="log10(n.allele)" , na.action = na.omit)
 abline(h=mean(log10(gen_clus$n.allele), na.rm=T), lty=2)
 
 ```
 
+```{r, results='asis'}
+par(mar=c(9,2,1,2))
+boxplot(log10(gen_clus$sample.size)~gen_clus$sp,   xlab=NA, las=2, col=no_green[names(no_green) %in% unique(gen_clus$sp)], ylab="log10(sample size")
+abline(h=mean(log10(gen_clus$sample.size), na.rm=T), lty=2)
+
+boxplot(log10(gen_count$sample.size) ~gen_count$sp,   xlab=NA, las=2, col=no_green[names(no_green) %in% unique(gen_count$sp)], ylab="log10(sample size)")
+abline(h=mean(log10(gen_count$sample.size), na.rm=T), lty=2)
+
+boxplot(gen_clus$no.of.loci~gen_clus$sp, col=no_green[names(no_green) %in% unique(gen_clus$sp)] , xlab=NA,  las=2, ylab="No. of loci")
+abline(h=mean(gen_clus$no.of.loci, na.rm=T), lty=2)
+
+boxplot(gen_count$no.of.loci~gen_count$sp, col=no_green[names(no_green) %in% unique(gen_count$sp)] , xlab=NA,  las=2, ylab="No. of loci")
+abline(h=mean(gen_count$no.of.loci, na.rm=T), lty=2)
+
+
+```
 
 
 ```{r include=TRUE}
@@ -216,7 +251,7 @@ gen_clus$dp_out[rownames(gen_clus) %in% Dp$rownames] <- TRUE
 gen_clus[which(gen_clus$DP_log %in% boxplot(gen_clus$DP_log, plot=F)$out),"dp_out"] <- TRUE
 ```
 
-Boxplots after outliers were removed
+*Boxplots after outliers were removed*
 
 ```{r, results='asis', echo=F}
 par(mar=c(9,4,1,2))
@@ -300,8 +335,7 @@ gen_count[which(gen_count$DP_log %in% boxplot(gen_count$DP_log, plot=F)$out),"dp
  ###
 ```
 
-
-## GD and DP Relationship within species
+## GD and DP Relationship within species (Figure S2)
 
 ```{r, echo=F}
 kable(sort(table(gen_clus$sp)), caption="Number of clusters in each species (from lowest to highest)")
@@ -310,7 +344,6 @@ sp_clus <- subset(gen_clus, sp %in% j)
 sp_clus <- droplevels(sp_clus)
 sp_clus$sp <- factor(sp_clus$sp, levels=j)
 ```
-
 
 ```{r, eval=T, include=F}
 gen_clus$population.gen <- gsub("Nature Reserve", "NR", gen_clus$population.gen)
@@ -348,11 +381,11 @@ for (i in 1:length(df_sp)){
   dp_out <- df$DP_log %in% boxplot(df$DP_log, plot=F)$out
   Ho_out <- df$ho %in% boxplot(df$ho, plot=F)$out 
 
-  p_Ho <- ggscatter(df, x = "DP_log", y = "ho",  xlab="log10(PD)", main="",
+  p_Ho <- ggscatter(df, x = "DP_log", y = "ho",  xlab="log10(PD)", size= "sample.size_log", main="",
               #  add = "reg.line",  # Add regressin line
                # add.params = list(color = "black", linecolor = "black"), # Customize reg. line
                 conf.int = F # Add confidence interval
-) + stat_cor(method = "p", alternative = "greater", color="black", size=5,digits=2,  label.y=1, aes(
+) + stat_cor(method = "p", alternative = "greater", color="black", digits=2,  label.y=1, aes(
                label =paste(..r.label.., ..p.label.., cut(..p.., 
                                               breaks = c(-Inf, 0.0001, 0.001, 0.01, 0.05, Inf),
                                               labels = c("'****'", "'***'", "'**'", "'*'", "''")), 
@@ -394,11 +427,11 @@ p_Ho <- p_Ho  + xlim(c(xmin, xmax+xoffset)) +  annotation_custom(grob = ybp_grob
 #
 He_out <- df$he %in% boxplot(df$he, plot=F)$out 
 
-p_He <- ggscatter(df, x = "DP_log", y = "he",  xlab="log10(PD)", main="",
+p_He <- ggscatter(df, x = "DP_log", y = "he",  xlab="log10(PD)",  size= "sample.size_log", main="",
                  # add = "reg.line",  # Add regressin line
                 #  add.params = list(color = "black"), # Customize reg. line
                   conf.int = F # Add confidence interval
-) + stat_cor(method = "p", alternative = "greater", color="black", size=5, label.y=1, digits=2,aes(
+) + stat_cor(method = "p", alternative = "greater", color="black", label.y=1, digits=2,aes(
                label =paste(..r.label.., ..p.label.., cut(..p.., 
                                               breaks = c(-Inf, 0.0001, 0.001, 0.01, 0.05, Inf),
                                               labels = c("'****'", "'***'", "'**'", "'*'", "''")), 
@@ -443,7 +476,7 @@ p_He
 df$n.allele_log <- log10(df$n.allele)
 ar_out <- df$n.allele_log %in% boxplot(df$n.allele_log, plot=F)$out 
 
-p_mna <- ggscatter(df, x = "DP_log", y = "n.allele_log", ylab="log10(Ar)", xlab="log10(PD)", main="",
+p_mna <- ggscatter(df, x = "DP_log", y = "n.allele_log", size= "sample.size_log", ylab="log10(Ar)", xlab="log10(PD)", main="",
                    #add = "reg",  # Add regressin line
                    #add.params = list(color = "black"), # Customize reg. line
                    conf.int = F # Add confidence interval
@@ -501,11 +534,12 @@ p_mna <- p_mna + xlim(c(xmin, xmax+xoffset))+
   annotation_custom(grob = xbp_grob, xmin = xmin-xoffset, xmax = xmax, ymax = ymin)
 
 
-plot_sp[[i]] <- ggarrange(p_Ho, p_He, p_mna, ncol=3, nrow=1, labels=lab[i], font.label = list(size = 14, color = "black", face = "italic"))
+plot_sp[[i]] <- ggarrange(p_Ho, p_He, p_mna, ncol=3, nrow=1, labels=c("A)","B)","C)"), font.label = list(size = 14, color = "black", face = "bold"))
 }
 ```
+### GD and PD relationship in 5 species with the most number of clusters
 
-#### GD and PD relationship in 5 species with the most number of clusters {.tabset}
+#### {.tabset}
 
 ```{r, echo=F, fig.width=10, fig.height=5, results='asis'}
 for (i in 1:length(plot_sp)) {
@@ -517,15 +551,9 @@ for (i in 1:length(plot_sp)) {
 
 ```
 
-###
-
-
 Red points represent the outliers in the GD data whereas green points are the outliers in the PD data.
 
-
-
-
-## Preliminary analyses
+### Preliminary analyses
 
 ```{r, include=F}
 #add label for figures
@@ -535,7 +563,7 @@ gen_clus$label <- paste0("atop(italic(",substr(gen_clus$genus, start = 1, stop =
 
 ```
 
--   Using mean estimates per species
+#### Using mean estimates per species
 
 ```{r}
 clus.mean <- gen_clus %>% group_by(sp) %>% summarise(
@@ -556,7 +584,7 @@ summary(m3)
 
 PD effect is nonsignificant when using mean estimates per species
 
--   Using mean estimates per cluster
+#### Using mean estimates per cluster
 
 ```{r}
 
@@ -585,9 +613,9 @@ Species effect is significant when using the estimated mean response variable pe
 
 ### Simple LME models (no covariates)
 
-1.  cluster dataset
+#### 1.  Cluster dataset
 
--   Ho
+-   *Ho*
 
 ```{r include=TRUE}
 library(lmerTest)
@@ -597,7 +625,16 @@ Ho.lmer <- lmer(ho ~ DP_log + (1|sp), data = df_Ho[!df_Ho$ho_out & !df_Ho$dp_out
 summary(Ho.lmer)
 ```
 
--   He
+
+-   *Ho + outliers*
+
+```{r include=TRUE}
+
+Ho.lmer.out <- lmer(ho ~ DP_log + (1|sp), data = df_Ho,  REML=F) 
+summary(Ho.lmer.out)
+```
+
+-   *He*
 
 ```{r include=TRUE}
 df_He <- subset(gen_clus, !is.na(he) & he < 1 & he > 0)
@@ -605,7 +642,14 @@ He.lmer <- lmer(he ~ DP_log + (1|sp), data = df_He[!df_He$he_out & !df_He$dp_out
 summary(He.lmer)
 ```
 
--   allelic richness
+-   *He + outliers*
+
+```{r include=TRUE}
+He.lmer.out <- lmer(he ~ DP_log + (1|sp), data = df_He, REML=F)
+summary(He.lmer.out)
+```
+
+-   *allelic richness*
 
 ```{r include=TRUE}
 #log transform n.allele to meet the normality of error term assumptions
@@ -616,9 +660,16 @@ mna.lmer <- lmer(n.allele_log ~ DP_log + (1|sp), data = df_mna[!df_mna$ar_out & 
 summary(mna.lmer)
 ```
 
-2.  Country dataset
+-   *allelic richness + outliers*
 
--   Ho
+```{r include=TRUE}
+mna.lmer.out <- lmer(n.allele_log ~ DP_log + (1|sp), data = df_mna, REML=FALSE)
+summary(mna.lmer.out)
+```
+
+#### 2.  Country dataset
+
+-   *Ho*
 
 ```{r include=TRUE}
 df_Ho.c <- subset(gen_count, !is.na(ho) & ho < 1)
@@ -627,7 +678,17 @@ Ho.c.lmer <- lmer(ho ~ DP_log + (1|sp), data = df_Ho.c[!df_Ho.c$ho_out & !df_Ho.
 summary(Ho.c.lmer)
 ```
 
--   He
+
+-   *Ho + outliers*
+
+```{r include=TRUE}
+Ho.c.lmer.out <- lmer(ho ~ DP_log + (1|sp), data = df_Ho.c,  REML=F) 
+summary(Ho.c.lmer.out)
+```
+
+
+
+-   *He*
 
 ```{r include=TRUE}
 df_He.c <- subset(gen_count, !is.na(he) & he < 1 & he > 0)
@@ -635,7 +696,14 @@ He.c.lmer <- lmer(he ~ DP_log + (1|sp), data = df_He.c[!df_He.c$he_out & !df_He.
 summary(He.c.lmer)
 ```
 
--   allelic richness
+-   *He + outliers*
+
+```{r include=TRUE}
+He.c.lmer.out <- lmer(he ~ DP_log + (1|sp), data = df_He.c, REML=F)
+summary(He.c.lmer.out)
+```
+
+-   *allelic richness*
 
 ```{r include=TRUE}
 #log transform n.allele to meet the normality of error term assumptions
@@ -643,6 +711,13 @@ gen_count$n.allele_log <- log10(gen_count$n.allele)
 df_mna.c <- subset(gen_count, !is.na(n.allele))
 mna.c.lmer <- lmer(n.allele_log ~ DP_log + (1|sp), data = df_mna.c[!df_mna.c$ar_out & !df_mna.c$dp_out,], REML=FALSE)
 summary(mna.c.lmer)
+```
+
+-   *allelic richness + outliers*
+
+```{r include=TRUE}
+mna.c.lmer.out <- lmer(n.allele_log ~ DP_log + (1|sp), data = df_mna.c, REML=FALSE)
+summary(mna.c.lmer.out)
 ```
 
 All 3 GD models showed significant effect of PD
@@ -751,7 +826,6 @@ df$GL  <- df$GenerationLength_d
 df <- df %>% mutate_at(c("DP_log","GL","BS_log","sample.size_log"), ~(scale(.) %>% as.vector))
 ```
 
-
 ```{r eval=TRUE}
 for (i in 1:4) {
   var <- c("DP_log","GL","BS_log","sample.size_log")
@@ -834,7 +908,6 @@ summary(best_mna)
 foo <- df[df$DP_log %in% head(sort(df$DP_log),5),]
 foo[order(foo$DP_log),]
 ```
-
 
 ```{r eval=TRUE, include=FALSE}
 best_mna.1 <- update(best_mna, data=df[!rownames(df) %in% c(159,204),])
@@ -1137,4 +1210,237 @@ for (j in 1:3) {
   
   cat(' \n \n')
 }
+```
+
+
+## PD in cluster vs country
+```{r}
+tdy <- He.lmer@frame %>% mutate(dataset="cluster")
+
+tdy.c <- He.c.lmer@frame %>% mutate(dataset="country")
+
+tdy.com <- rbind(tdy, tdy.c)
+tdy.com$dataset <- as.factor(tdy.com$dataset)
+      
+ggplot(data=tdy.com, aes(x=sp, y=DP_log, color=dataset, fill=dataset)) + geom_boxplot()
+
+table(tdy.com$sp, tdy.com$dataset)
+```
+
+```{r}
+ggplot(data=gen_clus, aes(x=he, y=n.allele)) + geom_point()
+```
+## fitted values by sp
+```{r}
+plot(Ho.lmer.out, form = resid(., type = "pearson") ~ fitted(.) | sp, abline = 0, 
+     cex = .5, pch = 20, col = "black")
+```
+
+
+```{r}
+library(nlme)
+m4.lme = lme(ho ~ DP_log, random = ~1|sp, data = df_Ho, method = "ML")
+
+m5.lme <- update(m4.lme, weights = varIdent(form = ~ 1 | sp), control = lmeControl(msMaxIter = 1000, msMaxEval = 1000))
+# compare models
+anova(m5.lme, m4.lme)
+
+# observed responses versus the within-group fitted values
+plot(m5.lme, ho ~ fitted(.), id = 0.05, adj = -0.3, 
+     , cex = .8, pch = 20, col = "blue")
+```
+     
+## Conduct leave-one-out cross validation
+I'm not entirely sure about this approach
+```{r}
+plot(Ho.lmer.out, id = 0.05, idLabels = ~.obs)
+
+df_Ho[c(179,104,139,146,37,48),]
+```
+```{r eval=FALSE, include=FALSE}
+estex.ho <- influence(Ho.lmer.out, "sp")
+#Calculate DFBETAS
+dfbetas(estex.ho)
+#The cut-off value of DFBETAS equals 2/√n (Belsley et al., 1980), which in this case equals
+2/sqrt(14)
+
+plot(estex.ho,
+     which="dfbetas",
+     xlab="DFbetaS",
+     ylab="sp")
+```
+
+```{r eval=FALSE, include=FALSE}
+#Using cooks distance = how far on average the predicted values will move if the observation is omitted
+cooks.distance(estex.ho,
+sort=TRUE)
+
+plot(estex.ho, which="cook",
+cutoff=4/14, sort=TRUE,
+xlab="Cook ́s Distance",
+ylab="sp")
+```
+
+## Manually
+Using all data (including outliers)
+The list's name indicate the species data that were left out
+
+### Cluster dataset
+*Ho*
+```{r}
+
+sp_i <- unique(df_Ho$sp)
+res_sp <- list()
+
+for (i in sp_i) {
+  res_sp[[i]] <- update(Ho.lmer.out, data=df_Ho[-which(df_Ho$sp == i),])
+}
+
+lapply(res_sp, summary)
+```
+
+
+*He*
+```{r}
+
+sp_i <- unique(df_He$sp)
+res_sp <- list()
+
+for (i in sp_i) {
+  res_sp[[i]] <- update(He.lmer.out, data=df_He[-which(df_He$sp == i),])
+}
+lapply(res_sp, summary)
+```
+
+*Allelic richness*
+```{r}
+
+sp_i <- unique(df_mna$sp)
+res_sp <- list()
+
+for (i in sp_i) {
+  res_sp[[i]] <- update(mna.lmer.out, data=df_mna[-which(df_mna$sp == i),])
+}
+lapply(res_sp, summary)
+```
+
+### Country dataset
+*Ho*
+```{r}
+
+sp_i <- unique(df_Ho.c$sp)
+res_sp <- list()
+
+for (i in sp_i) {
+  res_sp[[i]] <- update(Ho.c.lmer.out, data=df_Ho.c[-which(df_Ho.c$sp == i),])
+}
+
+lapply(res_sp, summary)
+```
+
+
+*He*
+```{r}
+
+sp_i <- unique(df_He.c$sp)
+res_sp <- list()
+
+for (i in sp_i) {
+  res_sp[[i]] <- update(He.c.lmer.out, data=df_He.c[-which(df_He.c$sp == i),])
+}
+lapply(res_sp, summary)
+```
+
+*Allelic richness*
+```{r}
+
+sp_i <- unique(df_mna.c$sp)
+res_sp <- list()
+
+for (i in sp_i) {
+  res_sp[[i]] <- update(mna.c.lmer.out, data=df_mna.c[-which(df_mna.c$sp == i),])
+}
+lapply(res_sp, summary)
+```
+### Using species with minimum 5 records
+
+```{r}
+xx <- names(which(table(df_Ho$sp) >= 5))
+newdf <- df_Ho[df_Ho$sp %in% xx,]
+mod.5 <- update(Ho.lmer.out, data = newdf, na.action=na.omit)
+summary(mod.5)
+res_sp <- list()
+
+for (i in xx) {
+  res_sp[[i]] <- update(Ho.lmer.out, data=newdf[-which(newdf$sp == i),])
+}
+lapply(res_sp, summary)
+
+```
+
+```{r}
+xx <- names(which(table(df_mna$sp) >= 5))
+newdf <- df_mna[df_mna$sp %in% xx,]
+mod.5 <- update(mna.lmer.out, data = newdf, na.action=na.omit)
+summary(mod.5)
+res_sp <- list()
+
+for (i in xx) {
+  res_sp[[i]] <- update(mna.lmer.out, data=newdf[-which(newdf$sp == i),])
+}
+lapply(res_sp, summary)
+
+```
+
+
+```{r}
+xx <- names(which(table(df_Ho.c$sp) >= 5))
+newdf <- df_Ho.c[df_Ho.c$sp %in% xx,]
+mod.5 <- update(Ho.c.lmer.out, data = newdf, na.action=na.omit)
+summary(mod.5)
+
+res_sp <- list()
+
+for (i in xx) {
+  res_sp[[i]] <- update(Ho.c.lmer.out, data=newdf[-which(newdf$sp == i),])
+}
+lapply(res_sp, summary)
+
+
+```
+
+```{r}
+xx <- names(which(table(df_He.c$sp) >= 5))
+newdf <- df_He.c[df_He.c$sp %in% xx,]
+mod.5 <- update(He.c.lmer.out, data = newdf, na.action=na.omit)
+summary(mod.5)
+
+res_sp <- list()
+
+for (i in xx) {
+  res_sp[[i]] <- update(He.c.lmer.out, data=newdf[-which(newdf$sp == i),])
+}
+lapply(res_sp, summary)
+
+```
+
+```{r}
+xx <- names(which(table(df_mna.c$sp) >= 5))
+newdf <- df_mna.c[df_mna.c$sp %in% xx,]
+mod.5 <- update(mna.c.lmer.out, data = newdf, na.action=na.omit)
+summary(mod.5)
+
+res_sp <- list()
+
+for (i in xx) {
+  res_sp[[i]] <- update(mna.c.lmer.out, data=newdf[-which(newdf$sp == i),])
+}
+lapply(res_sp, summary)
+
+```
+
+```{r}
+new2df <- df_mna.c[!df_mna.c$sp %in% c("Panthera tigris","Panthera pardus"),]
+mod.2 <- update(mna.c.lmer.out, data = new2df, na.action=na.omit)
+summary(mod.2)
 ```

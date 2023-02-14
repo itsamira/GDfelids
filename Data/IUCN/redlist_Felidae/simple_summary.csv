@@ -1,0 +1,39 @@
+assessmentId,internalTaxonId,sp,kingdomName,phylumName,orderName,className,familyName,genusName,speciesName,infraType,infraName,infraAuthority,authority,redlistCategory,redlistCriteria,criteriaVersion,populationTrend,scopes
+50649567,219,Acinonyx jubatus,ANIMALIA,CHORDATA,CARNIVORA,MAMMALIA,FELIDAE,Acinonyx,jubatus,,,,"(Schreber, 1775)",Vulnerable,A2acd; C1,3.1,Decreasing,Global
+50651398,8539,Felis bieti,ANIMALIA,CHORDATA,CARNIVORA,MAMMALIA,FELIDAE,Felis,bieti,,,,"Milne-Edwards, 1892",Vulnerable,C2a(i),3.1,Decreasing,Global
+50651463,8540,Felis chaus,ANIMALIA,CHORDATA,CARNIVORA,MAMMALIA,FELIDAE,Felis,chaus,,,,"Schreber, 1777",Least Concern,,3.1,Decreasing,Global
+50651884,8541,Felis margarita,ANIMALIA,CHORDATA,CARNIVORA,MAMMALIA,FELIDAE,Felis,margarita,,,,"Loche, 1858",Least Concern,,3.1,Unknown,Global
+50652361,60354712,Felis silvestris,ANIMALIA,CHORDATA,CARNIVORA,MAMMALIA,FELIDAE,Felis,silvestris,,,,"Schreber, 1777",Least Concern,,3.1,Decreasing,Global
+50653167,9948,Herpailurus yagouaroundi,ANIMALIA,CHORDATA,CARNIVORA,MAMMALIA,FELIDAE,Herpailurus,yagouaroundi,,,,"(É. Geoffroy Saint-Hilaire, 1803)",Least Concern,,3.1,Decreasing,Global
+50653881,54012637,Leopardus tigrinus,ANIMALIA,CHORDATA,CARNIVORA,MAMMALIA,FELIDAE,Leopardus,tigrinus,,,,"(Schreber, 1775)",Vulnerable,A2c,3.1,Decreasing,Global
+50654216,11511,Leopardus wiedii,ANIMALIA,CHORDATA,CARNIVORA,MAMMALIA,FELIDAE,Leopardus,wiedii,,,,"(Schinz, 1821)",Near Threatened,,3.1,Decreasing,Global
+50655874,12521,Lynx rufus,ANIMALIA,CHORDATA,CARNIVORA,MAMMALIA,FELIDAE,Lynx,rufus,,,,"(Schreber, 1777)",Least Concern,,3.1,Stable,Global
+50657011,15310,Leopardus geoffroyi,ANIMALIA,CHORDATA,CARNIVORA,MAMMALIA,FELIDAE,Leopardus,geoffroyi,,,,"(d'Orbigny &amp; Gervais, 1844)",Least Concern,,3.1,Stable,Global
+50657245,15311,Leopardus guigna,ANIMALIA,CHORDATA,CARNIVORA,MAMMALIA,FELIDAE,Leopardus,guigna,,,,"(Molina, 1782)",Vulnerable,A2abc; C2a(i),3.1,Decreasing,Global
+50657407,15452,Leopardus jacobita,ANIMALIA,CHORDATA,CARNIVORA,MAMMALIA,FELIDAE,Leopardus,jacobita,,,,"(Cornalia, 1865)",Endangered,C2a(i),3.1,Decreasing,Global
+50659951,15955,Panthera tigris,ANIMALIA,CHORDATA,CARNIVORA,MAMMALIA,FELIDAE,Panthera,tigris,,,,"(Linnaeus, 1758)",Endangered,A2abcd; C1,3.1,Decreasing,Global
+50661611,18146,Prionailurus bengalensis,ANIMALIA,CHORDATA,CARNIVORA,MAMMALIA,FELIDAE,Prionailurus,bengalensis,,,,"(Kerr, 1792)",Least Concern,,3.1,Stable,Global
+50662095,18148,Prionailurus planiceps,ANIMALIA,CHORDATA,CARNIVORA,MAMMALIA,FELIDAE,Prionailurus,planiceps,,,,"(Vigors &amp; Horsfield, 1827)",Endangered,C1,3.1,Decreasing,Global
+50662471,18149,Prionailurus rubiginosus,ANIMALIA,CHORDATA,CARNIVORA,MAMMALIA,FELIDAE,Prionailurus,rubiginosus,,,,"(I. Geoffroy Saint-Hilaire, 1831)",Near Threatened,,3.1,Decreasing,Global
+50662615,18150,Prionailurus viverrinus,ANIMALIA,CHORDATA,CARNIVORA,MAMMALIA,FELIDAE,Prionailurus,viverrinus,,,,"(Bennett, 1833)",Vulnerable,A2cd+3cd+4cd,3.1,Decreasing,Global
+50663128,18306,Caracal aurata,ANIMALIA,CHORDATA,CARNIVORA,MAMMALIA,FELIDAE,Caracal,aurata,,,,"(Temminck, 1827)",Vulnerable,A2c+3c,3.1,Decreasing,Global
+50664030,22732,Panthera uncia,ANIMALIA,CHORDATA,CARNIVORA,MAMMALIA,FELIDAE,Panthera,uncia,,,,"(Schreber, 1775)",Vulnerable,C1,3.1,Decreasing,Global
+54010576,54010476,Leopardus guttulus,ANIMALIA,CHORDATA,CARNIVORA,MAMMALIA,FELIDAE,Leopardus,guttulus,,,,"Hensel, 1872",Vulnerable,C1,3.1,Decreasing,Global
+97164299,16218,Pardofelis marmorata,ANIMALIA,CHORDATA,CARNIVORA,MAMMALIA,FELIDAE,Pardofelis,marmorata,,,,"(Martin, 1837)",Near Threatened,,3.1,Decreasing,Global
+97165437,4038,Catopuma temminckii,ANIMALIA,CHORDATA,CARNIVORA,MAMMALIA,FELIDAE,Catopuma,temminckii,,,,"(Vigors &amp; Horsfield, 1827)",Near Threatened,,3.1,Decreasing,Global
+97204446,15309,Leopardus colocolo,ANIMALIA,CHORDATA,CARNIVORA,MAMMALIA,FELIDAE,Leopardus,colocolo,,,,"(Molina, 1782)",Near Threatened,,3.1,Decreasing,Global
+97212355,11509,Leopardus pardalis,ANIMALIA,CHORDATA,CARNIVORA,MAMMALIA,FELIDAE,Leopardus,pardalis,,,,"(Linnaeus, 1758)",Least Concern,,3.1,Decreasing,Global
+97212874,136603,Neofelis diardi,ANIMALIA,CHORDATA,CARNIVORA,MAMMALIA,FELIDAE,Neofelis,diardi,,,,"(G. Cuvier, 1823)",Vulnerable,A2c; C1,3.1,Decreasing,Global
+97215090,14519,Neofelis nebulosa,ANIMALIA,CHORDATA,CARNIVORA,MAMMALIA,FELIDAE,Neofelis,nebulosa,,,,"(Griffith, 1821)",Vulnerable,A2cd+3cd,3.1,Decreasing,Global
+97216466,18868,Puma concolor,ANIMALIA,CHORDATA,CARNIVORA,MAMMALIA,FELIDAE,Puma,concolor,,,,"(Linnaeus, 1771)",Least Concern,,3.1,Decreasing,Global
+101138963,12518,Lynx canadensis,ANIMALIA,CHORDATA,CARNIVORA,MAMMALIA,FELIDAE,Lynx,canadensis,,,,"Kerr, 1792",Least Concern,,3.1,Stable,Global
+102424310,3847,Caracal caracal,ANIMALIA,CHORDATA,CARNIVORA,MAMMALIA,FELIDAE,Caracal,caracal,,,,"(Schreber, 1776)",Least Concern,,3.1,Unknown,Global
+112910221,4037,Catopuma badia,ANIMALIA,CHORDATA,CARNIVORA,MAMMALIA,FELIDAE,Catopuma,badia,,,,"(Gray, 1874)",Endangered,C1,3.1,Decreasing,Global
+115130419,15951,Panthera leo,ANIMALIA,CHORDATA,CARNIVORA,MAMMALIA,FELIDAE,Panthera,leo,,,,"(Linnaeus, 1758)",Vulnerable,A2abcd,3.1,Decreasing,Global
+121707666,12519,Lynx lynx,ANIMALIA,CHORDATA,CARNIVORA,MAMMALIA,FELIDAE,Lynx,lynx,,,,"(Linnaeus, 1758)",Least Concern,,3.1,Stable,Global
+123791436,15953,Panthera onca,ANIMALIA,CHORDATA,CARNIVORA,MAMMALIA,FELIDAE,Panthera,onca,,,,"(Linnaeus, 1758)",Near Threatened,A2cd,3.1,Decreasing,Global
+156536762,11638,Leptailurus serval,ANIMALIA,CHORDATA,CARNIVORA,MAMMALIA,FELIDAE,Leptailurus,serval,,,,"(Schreber, 1776)",Least Concern,,3.1,Stable,Global
+163991139,15954,Panthera pardus,ANIMALIA,CHORDATA,CARNIVORA,MAMMALIA,FELIDAE,Panthera,pardus,,,,"(Linnaeus, 1758)",Vulnerable,A2cd,3.1,Decreasing,Global
+174111773,12520,Lynx pardinus,ANIMALIA,CHORDATA,CARNIVORA,MAMMALIA,FELIDAE,Lynx,pardinus,,,,"(Temminck, 1827)",Endangered,D,3.1,Increasing,"Global, Europe & Mediterranean"
+177944648,8542,Felis nigripes,ANIMALIA,CHORDATA,CARNIVORA,MAMMALIA,FELIDAE,Felis,nigripes,,,,"Burchell, 1824",Vulnerable,C2a(i),3.1,Decreasing,Global
+180145377,15640,Otocolobus manul,ANIMALIA,CHORDATA,CARNIVORA,MAMMALIA,FELIDAE,Otocolobus,manul,,,,"(Pallas, 1776)",Least Concern,,3.1,Decreasing,Global

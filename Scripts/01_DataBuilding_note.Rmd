@@ -1,9 +1,9 @@
 ---
 title: "Data Building"
 output:
+  html_notebook: default
   html_document:
     df_print: paged
-  html_notebook: default
   pdf_document: default
 ---
 
@@ -11,8 +11,14 @@ output:
 library(tidyr)
 library(dplyr)
 library(knitr)
+<<<<<<< HEAD
+url.fl =  "/GDfelids"
+opts_chunk$set(warning = FALSE, message = FALSE, root.dir = url.fl)
+=======
 opts_chunk$set(warning = FALSE, message = FALSE)
+>>>>>>> ebf65551c38edf2407127bdc51f5068fbfd7b24c
 options(width = 100)
+setwd(url.fl)
 ```
 
 Data building script for grouping GD and PD estimates based on
@@ -22,9 +28,15 @@ Data building script for grouping GD and PD estimates based on
 
 ```{r, include=F}
 
+<<<<<<< HEAD
+#source("Scripts/DataCleanup.R")
+load("Data/Popgenden.rda")
+load("Data/GPall_data.rda")
+=======
 #source("Rscript/DataCleanup.R")
 load("/Data/GPall_data.rda")
 # This data file is not available to public
+>>>>>>> ebf65551c38edf2407127bdc51f5068fbfd7b24c
 # 3 df objects: gen, den and gp_df
 
 ```
@@ -216,10 +228,15 @@ sp_df$distance.lowerthanDI <- sp_df$distance <= sp_df$DI*1e3
 ```
 
 ```{r include=FALSE}
-## Automatic processing for all species
+## Automatic K-means clustering processing for all species
 
+<<<<<<< HEAD
+#source("Scripts/DataBuilding_auto.R") to produce GPclus_results.rds
+gp_full <- readRDS("Data/GPclus_results.rds")
+=======
 #source("Scripts/DataBuilding_auto.R")
 
+>>>>>>> ebf65551c38edf2407127bdc51f5068fbfd7b24c
 gp_df <- merge(gp_df, gp_full, all.x=T)
 gp_df <- merge(gp_df, sigma_df)
 # DI is in km, distance is in m
@@ -283,12 +300,16 @@ clus_sp <- clus_sp[which(sp_df$distance.lowerthanDI == TRUE),]
 
 ```{r eval=TRUE, include=F}
 ## load cluster data (from 5_Kmeans)
-gp_df <- readRDS("Data/Cluster_res_biogeo_v5.rds")
+gp_df <- readRDS(paste0(url.fl,"/Data/Cluster_res_biogeo_v5.rds"))
 clus.res <- gp_df
+<<<<<<< HEAD
+=======
 source("Script/DataBuilding_Merge_clusters.R")
+>>>>>>> ebf65551c38edf2407127bdc51f5068fbfd7b24c
 
+# source("Rscript/DataBuilding_Merge_clusters.R")
 # load results from DataBuilding_Merge_clusters.R
-#load("Data/Popgenden.rda")
+load(paste0(url.fl,"/Data/Popgenden.rda"))
 ```
 
 # Visualise the clustering results
@@ -410,6 +431,7 @@ nrefden <- tapply(ref.df$ref.den, ref.df$sp, n_distinct)
 tabS1 <- cbind.data.frame(nrefgen, nrefden, ncc)
 tabS1$sp <- rownames(tabS1)
 
+
 gd_rec <- table(gen_clus$sp)
 clus_n <- tapply(gen_clus$cluster_center, gen_clus$sp,n_distinct)
 pd_rec <- aggregate(DP_n ~ sp, data = gen_clus, sum)
@@ -516,11 +538,15 @@ gp_df.1 <- gp_df[gp_df$SxC %in% intersect(gen_count$SxC, gp_df$SxC),]
 gp_df.1$source <- gsub("Popden", "Population density", gp_df.1$source)
 gp_df.1$source <- gsub("Popgen", "Population genetic", gp_df.1$source)
 
-map_clus <- basemap + geom_point(data=sum.df, aes(x=long, y=lat, group=cc.sp, col=sp, pch=source), size=1, show.legend=F ) +
+map_clus <- basemap + geom_point(data=sum.df, aes(x=long, y=lat, group=cc.sp, col=sp, pch=source), size=2, show.legend=T ) +
   geom_path(data = sum.df, aes(x = long, y = lat, col=sp, group=cc.sp), size = 0.5, lineend = "round", show.legend=FALSE) +
   scale_shape_manual(values=c(16,4)) +
   guides(shape = guide_legend(nrow=2, byrow=T)) +
-  scale_colour_manual(values = no_green[names(no_green) %in% gp_df.1$sp]) +
+  #scale_colour_manual(values = no_green[names(no_green) %in% gp_df.1$sp]) +
+  scale_colour_manual(values = no_green[names(no_green) %in% gp_df.1$sp], guide =
+                        guide_legend(override.aes=list(shape=15, size=4), nrow=3,
+                                                                     label.theme=element_text(size=9, 
+                                                                                              face="italic"))) +
   theme(axis.line=element_blank(),axis.text.x=element_blank(),
         axis.text.y=element_blank(),axis.ticks=element_blank(),
         axis.title.x=element_blank(),
@@ -529,7 +555,8 @@ map_clus <- basemap + geom_point(data=sum.df, aes(x=long, y=lat, group=cc.sp, co
                                     fill = NA,
                                     size = 1),panel.grid.major=element_blank(),
         panel.grid.minor=element_blank(),plot.background=element_blank(),
-        plot.margin = unit(c(-1, -1, 0, -1), "cm"),
+        #plot.margin = unit(c(-1, -1, 0, -1), "cm"),
+        plot.margin = unit(c(-0.5, -1, 0, -1), "cm"),
         legend.title = element_blank(),
         legend.key = element_blank())
 
@@ -560,4 +587,51 @@ map_count <- basemap +
 
 ```{r, echo=F, results='asis', out.width="0.3\\linewidth"}
 ggpubr::ggarrange(map_clus, map_count, nrow=2, heights=c(0.8,1.1), labels=c("A)","B)"))
+```
+# Separate PD and GD in country map_count
+```{r}
+## PD
+PD_plot <- basemap + 
+  geom_point(data=gp_df.1[gp_df.1$source == "Population density",], aes(x=long, y=lat, group=sp, col=sp), pch=16, size=2, show.legend=F ) +
+  guides(shape = guide_legend(nrow=2, byrow=T)) +
+  scale_colour_manual(values = no_green[names(no_green) %in% gp_df.1$sp]) +
+  theme(axis.line=element_blank(),axis.text.x=element_blank(),
+        axis.text.y=element_blank(),axis.ticks=element_blank(),
+        axis.title.x=element_blank(),
+        axis.title.y=element_blank(),legend.position="bottom",
+        panel.background=element_blank(),panel.border=element_rect(color = "black",
+                                    fill = NA,
+                                    size = 1),panel.grid.major=element_blank(),
+        panel.grid.minor=element_blank(),plot.background=element_blank(),
+        plot.margin = unit(c(-1, -1, 0, -1), "cm"),
+        legend.title = element_blank(),
+        legend.key = element_blank())
+
+## GD
+GD_plot <- basemap +
+  #geom_polygon(data=count_data, fill = "grey", alpha=0.2, colour = "darkgray", size=0) +
+  geom_point(data=gp_df.1[gp_df.1$source == "Population genetic",], 
+             aes(x=long, y=lat, col=sp, group=sp), pch=4, size=2, alpha=1, show.legend=F) +
+  #scale_colour_manual(values = no_green[names(no_green) %in% gp_df.1$sp], guide =
+  #                      guide_legend(override.aes=list(shape=15, size=4), nrow=3,
+  #                                                                   label.theme=element_text(size=9, 
+  #                                                                                      face="italic"))) +
+   guides(shape = guide_legend(nrow=2, byrow=T)) +
+  scale_colour_manual(values = no_green[names(no_green) %in% gp_df.1$sp]) +
+  theme(axis.line=element_blank(),axis.text.x=element_blank(),
+        axis.text.y=element_blank(),axis.ticks=element_blank(),
+        axis.title.x=element_blank(),
+        axis.title.y=element_blank(),legend.position="bottom",
+        panel.background=element_blank(),panel.border=element_rect(color = "black",
+                                    fill = NA,
+                                    size = 1),panel.grid.major=element_blank(),
+        panel.grid.minor=element_blank(),plot.background=element_blank(),
+        plot.margin = unit(c(-0.5, -1, 0, -1), "cm"),
+        legend.title = element_blank(),
+        legend.key = element_blank())
+
+```
+
+```{r, echo=F, results='asis', out.width="0.3\\linewidth"}
+ggpubr::ggarrange(PD_plot, GD_plot, map_clus, nrow=3, heights=c(1,1,1.5), labels=c("A)","B)", "C)"))
 ```

@@ -23,9 +23,17 @@ getREALMS <- function(df){
   df
 }
 
+<<<<<<< HEAD
+# Gen and Den from 
 gendata <- getREALMS(gen[!is.na(gen$long),])
 dendata <- getREALMS(den[!is.na(den$long),])
 
+
+=======
+gendata <- getREALMS(gen[!is.na(gen$long),])
+dendata <- getREALMS(den[!is.na(den$long),])
+
+>>>>>>> ebf65551c38edf2407127bdc51f5068fbfd7b24c
 ###################################
 ## Merge gendata with clus.res to identify the clusters
 # Initialise df
@@ -40,6 +48,18 @@ for (j in sort(unique(gendata$sp))){
     clus_sp <- subset(clus.res, sp %in% j)
     clus_sp <- clus_sp[which(clus_sp$distance.lowerthanDI == TRUE),]
     
+<<<<<<< HEAD
+
+    #### Uncomment the lines below to produce gen_clus without "country-level" population
+    # remove gen with country
+    #if(any(gendata_sp$country == gendata_sp$population)) {
+    #  pp <- which(tolower(gendata_sp$country) == tolower(gendata_sp$population))
+    #  gendata_sp <- gendata_sp[-pp, ]
+    #}
+    ###################################
+    
+=======
+>>>>>>> ebf65551c38edf2407127bdc51f5068fbfd7b24c
     if(nrow(clus_sp) <= 1) next
     
     #if(j == "Panthera leo") {
@@ -170,7 +190,11 @@ gen_eco <- gen_eco[!is.na(gen_eco$DP_mean),]
 
 
 ## Add body size (from Johnson's data)
+<<<<<<< HEAD
+pdenIV <- read.csv("Data/bodysize.csv")
+=======
 pdenIV <- read.csv("/home/amira.azizan/Documents/Y320/GenDivDatabase/Data/etc/pdenIV.csv")
+>>>>>>> ebf65551c38edf2407127bdc51f5068fbfd7b24c
 pdenIV$sp <- pdenIV$Sname
 pdenIV$sp <- reorder(pdenIV$sp, pdenIV$BS)
 BS_df <- unique(pdenIV[,c("sp","BS")])
@@ -180,31 +204,54 @@ gen_clus$BS <- NULL
 
 gen_clus <- left_join(gen_clus, BS_df)
 gen_count <- left_join(gen_count, BS_df)
+<<<<<<< HEAD
+#gen_eco <- left_join(gen_eco, BS_df)
+
+# Allocate generation time (from Pacifici et al.)
+gentime <- read.csv("Data/GenerationtimeFelidae.csv", sep=",")
+=======
 gen_eco <- left_join(gen_eco, BS_df)
 
 # Allocate generation time (from Pacifici et al.)
 gentime <- read.csv("Data/etc/GenerationtimeFelidae.csv", sep=",")
+>>>>>>> ebf65551c38edf2407127bdc51f5068fbfd7b24c
 gentime$GL <- round(gentime$GenerationLength_d/365,0)
 names(gentime)[[1]] <- "sp"
 
 gen_clus <- left_join(gen_clus, gentime[,c("sp","GL","GenerationLength_d")])
 gen_count <- left_join(gen_count, gentime[,c("sp","GL","GenerationLength_d")])
+<<<<<<< HEAD
+# gen_eco <- left_join(gen_eco, gentime[,c("sp","GL","GenerationLength_d")])
+=======
 gen_eco <- left_join(gen_eco, gentime[,c("sp","GL","GenerationLength_d")])
+>>>>>>> ebf65551c38edf2407127bdc51f5068fbfd7b24c
 
 
 ## Add DP x home range
 ## Home range
+<<<<<<< HEAD
+sigma <- read.csv("Data/Sigma_data.csv")
+=======
 sigma <- read.csv("Data/etc/sigma.csv")
+>>>>>>> ebf65551c38edf2407127bdc51f5068fbfd7b24c
 sigma$Sname
 names(sigma)[1] <- "sp"
 gen_clus <- left_join(gen_clus, sigma[,c("sp","HR","DI")])
 gen_count <- left_join(gen_count, sigma[,c("sp","HR", "DI")])
+<<<<<<< HEAD
+#gen_eco <- left_join(gen_eco, sigma[,c("sp","HR", "DI")])
+=======
 gen_eco <- left_join(gen_eco, sigma[,c("sp","HR", "DI")])
+>>>>>>> ebf65551c38edf2407127bdc51f5068fbfd7b24c
 
 
 ## Add conservation status (28/04/2020)
 # Only otocolobus manul's status has changed in 2019/2020
+<<<<<<< HEAD
+iucn <- read.csv("Data/IUCN/redlist_Felidae/simple_summary.csv")
+=======
 iucn <- read.csv("Data/etc/IUCN/redlist_Felidae/simple_summary.csv")
+>>>>>>> ebf65551c38edf2407127bdc51f5068fbfd7b24c
 iucn <- iucn[,c("sp","genusName","redlistCategory","populationTrend")]
 iucn$redlistCategory <- factor(iucn$redlistCategory, levels=c("Endangered","Vulnerable","Near Threatened","Least Concern"))
 iucn$iucn <- iucn$redlistCategory
@@ -213,7 +260,11 @@ levels(iucn$iucn) <- c("T","T", "NT", "NT")
 
 gen_clus <- left_join(gen_clus, iucn)
 gen_count <- left_join(gen_count, iucn)
+<<<<<<< HEAD
+#gen_eco <- left_join(gen_eco, iucn)
+=======
 gen_eco <- left_join(gen_eco, iucn)
+>>>>>>> ebf65551c38edf2407127bdc51f5068fbfd7b24c
 
 #gen_clus$population <- gsub("Whole Bhutan", "Bhutan", gen_clus$population)
 gen_count$population <- gsub("Whole Bhutan", "Bhutan", gen_count$population)
@@ -274,7 +325,14 @@ gen_count.l <- gen_count
 
 #####################################
 #save(gendata, dendata, file="Data/GenDen_Rawdata_V4.rda")
+<<<<<<< HEAD
+#save(gen_clus, gen_count, file="Data/Popgenden.rda")
+
+
+## after removing country at cluster level saveRDS(gen_clus, file="Data/Popgenden_no_country.rds")
+=======
 save(gen_clus, gen_count, file="Data/Popgenden_biogeo_V4.rda")
+>>>>>>> ebf65551c38edf2407127bdc51f5068fbfd7b24c
 #save(gen_clus.l, gen_count.l, file="Data/Popgenden_biogeo_V4_LION.rda")
 #####################################
 
